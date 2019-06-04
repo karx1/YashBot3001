@@ -71,7 +71,7 @@ class InfoCog(commands.Cog):
   
   @commands.command()
   async def source(self, ctx):
-    await ctx.send("My code can be found here: https://repl.it/@Nerdstep710/YashBot3001. Don't try to run it, as it will not work.")
+    await ctx.send("My code can be found here: https://github.com/nerdstep710/YashBot3001")
 
   @commands.command()
   async def uptime(self, ctx):
