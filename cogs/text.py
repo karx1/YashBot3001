@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from pyfiglet import figlet_format
 from gtts import gTTS
-import time
 import datetime
 
 
@@ -36,13 +35,10 @@ class TextCog(commands.Cog):
 
   @commands.command()
   async def tts(self, ctx, *, message=""):
-    num = ctx.message.author.display_name
-    time = datetime.datetime.now()
-    time = str(time)
     if message is "":
       message = ctx.message.author.display_name
     await ctx.trigger_typing()
-    tts = gTTS(text=message.lower(), lang="en-GB-Standard-D")
+    tts = gTTS(text=message.lower(), lang="en")
     tts.save('cogs/data/out/out.wav')
     await ctx.send(file=discord.File('cogs/data/out/out.wav'))
 
