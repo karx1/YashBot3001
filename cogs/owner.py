@@ -16,18 +16,16 @@ class OwnerCog(commands.Cog):
     channel = self.client.get_channel(577195540165558350)
     name = ctx.message.author.display_name
     avy = ctx.message.author.avatar
-    print("Test successful for {}".format(name))
+    print(f"Test successful for {name}")
     await channel.send(avy)
-    await channel.send("Test successful for {}".format(name))
+    await channel.send(f"Test successful for {name}")
 
 
   @commands.command()
   @is_me()
   async def poll(self, ctx, *, question=""):
     channel = self.client.get_channel(579317022740185098)
-    role = ctx.message.guild.get_role(583105133232259085)
-    await channel.send("{} {}".format(role.mention, question))
-    message = channel.last_message
+    message = await channel.send(f"@everyone {question}")
     await message.add_reaction(u"\U0001F44D")
     await message.add_reaction(u"\U0001F44E")
 
