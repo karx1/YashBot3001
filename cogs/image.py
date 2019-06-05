@@ -29,7 +29,7 @@ class ImageCog(commands.Cog):
     save = image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
-  @commands.command()
+  @commands.command(aliases=["pewdiepie", 'felix'])
   async def pewds(self, ctx, *, sent: commands.clean_content):
     bio = BytesIO()
     image = Image.open(r'cogs/data/pewds.jpg')
