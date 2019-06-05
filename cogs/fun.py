@@ -62,7 +62,7 @@ class FunCog(commands.Cog):
     print("R.I.P " + str(target))
     if target is "":
       target = ctx.message.author.display_name
-    await ctx.send("{} was killed!".format(target))
+    await ctx.send(f'{target} was killed!')
 
 
   @commands.command()
@@ -70,13 +70,13 @@ class FunCog(commands.Cog):
     print("Get him!")
     if target is "":
       target = ctx.message.author.display_name
-    await ctx.send("{} was bullied...".format(target))
+    await ctx.send(f"{target} was killed!")
 
   @commands.command()
   async def rate(self, ctx):
     possible_responses = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
     rating = random.choice(possible_responses)
-    await ctx.send("I rate {} {} out of 10!".format(ctx.message.author.mention, rating))
+    await ctx.send(f"I rate {ctx.author.mention} {rating} out of 10!")
 
 
   @commands.command()
@@ -87,7 +87,7 @@ class FunCog(commands.Cog):
       'tails'
     ]
     flipped_value = random.choice(possible_responses)
-    await ctx.send("You got {}!".format(flipped_value))
+    await ctx.send(f"You got {flipped_value}!")
 
 
   @commands.command()
@@ -102,7 +102,7 @@ class FunCog(commands.Cog):
       '6'
     ]
     rolled_value = random.choice(possible_responses)
-    await ctx.send("You rolled a {}!".format(rolled_value))
+    await ctx.send(f"You rolled a {rolled_value}!")
 
 
   @commands.command()
@@ -130,8 +130,8 @@ class FunCog(commands.Cog):
     if target is "":
       target = ctx.message.author.display_name
     possible_responses = [
-      '{} was spared by the great titan Thanos.'.format(target),
-      '{} was sacrificed for the greater good of the universe. Perfectly balanced, as all things should be.'.format(target)
+      f'{target} was spared by the great titan Thanos.',
+      f'{target} was sacrificed for the greater good of the universe. Perfectly balanced, as all things should be.'
     ]
     answer = random.choice(possible_responses)
     await ctx.send(answer)
@@ -167,13 +167,13 @@ class FunCog(commands.Cog):
       elif var1 == "rock":
         winner = "It's a tie!"
       elif var1 == "scissors":
-        winner = "{} wins!".format(name)
+        winner = f"{name} wins!"
       else:
         winner = "woahhhhh"
     elif choice == "paper":
       thumb = "https://cdn.pixabay.com/photo/2017/10/07/21/57/pape-2828083_960_720.png"
       if var1 == "rock":
-        winner = "{} wins!".format(name)
+        winner = f"{name} wins!"
       elif var1 == "paper":
         winner = "It's a tie!"
       elif var1 == "scissors":
@@ -185,14 +185,14 @@ class FunCog(commands.Cog):
       if var1 == "rock":
         winner = "Yay! I won!"
       elif var1 == "paper":
-        winner = "{} wins!".format(name)
+        winner = f"{name} wins!"
       elif var1 == "scissors":
         winner = "It's a tie!"
     else:
       await ctx.send("You must either say rock, paper, or scissors!")
       return
     embed=discord.Embed(title="", description="Rock Paper Scissors!", color=0x00ff00)
-    embed.add_field(name="{}'s Choice".format(name), value=choice, inline=False)
+    embed.add_field(name=f"{name}'s Choice", value=choice, inline=False)
     embed.add_field(name="My Choice", value=var1, inline=False)
     embed.add_field(name="Results:", value=winner, inline=False)
     embed.set_thumbnail(url=thumb)
