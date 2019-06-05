@@ -1,0 +1,11 @@
+discord.py==1.1.1
+Flask==1.0.3
+google==2.0.2
+beautifulsoup4==4.7.1
+gTTS==2.0.3
+discord-interactive==3.0
+jishaku==1.12.3.123
+pyfiglet==0.8.post1
+Pillow==6.0.0
+
+Please note that this is a growing and evolving document. Over time I will be adding more and more requirements.
