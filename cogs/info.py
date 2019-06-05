@@ -65,7 +65,7 @@ class InfoCog(commands.Cog):
     root.link(page7, description="Web", reaction=u"\U0001F4BB")
     root.link(page8, description="Other", reaction=u"\u2753")
     h = Help(self.client, root)
-    await ctx.send("Check your DM's, {}!".format(ctx.message.author.mention))
+    await ctx.send(f"Check your DM's, {ctx.message.author.mention}!")
     await h.display(ctx.message.author)
 
   
@@ -78,6 +78,16 @@ class InfoCog(commands.Cog):
     command_time = datetime.datetime.now()
     ut = command_time - c.start_time
     await ctx.send(f"This bot has been alive for {ut}")
+
+  @commands.command()
+  async def guilds(self, ctx):
+    server_count = len(self.client.guilds)
+    await ctx.send(f"I am in **{server_count}** guilds!")
+
+  @commands.command()
+  async def users(self, ctx):
+    user_count = len(self.client.users)
+    await ctx.send(f"I can see **{user_count}** users!")
 
 def setup(client):
   client.add_cog(InfoCog(client))
