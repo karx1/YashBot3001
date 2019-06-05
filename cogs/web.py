@@ -13,28 +13,27 @@ class WebCog(commands.Cog):
     name = str(ctx.message.author)
     name_plain = ctx.message.author.display_name
     if query is "":
-      await ctx.send("You must provide a search term, {}!".format(name_plain))
+      await ctx.send(f"You must provide a search term, {name_plain}!")
       return
     await ctx.trigger_typing()
     for j in search(query, tld="com", num=1, stop=1):
-      print("{} has searched for '{}' and it returned {}".format(name, query, j))
+      print(f"{name} has searched for '{query}' and it returned {j}")
       await ctx.send(j)
 
   @commands.command()
   async def youtube(self, ctx, *, query=""):
     r = 0
     if query == "":
-      await ctx.send("You must provide a search term, {}!".format(ctx.author.mention))
+      await ctx.send(f"You must provide a search term, {ctx.author.mention}!")
     async with ctx.typing():
       search = urllib.parse.quote(query)
-      url = "https://www.youtube.com/results?search_query={}".format(search)
+      url = f"https://www.youtube.com/results?search_query={search}"
       response = urllib.request.urlopen(url)
       html = response.read()
       soup = BeautifulSoup(html, 'html.parser')
       for vid in soup.findAll(attrs={'class':'yt-uix-tile-link'}):
         while r == 0:
-          await ctx.send('https://www.youtube.com{}'.format(vid['href']))
-          print("{} has searched for '{}'.".format(str(ctx.message.author), query))
+          await ctx.send(f"https://www.youtube.com{vid['href']}")
           r = r + 1
 
 def setup(client):
