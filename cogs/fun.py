@@ -50,8 +50,8 @@ class FunCog(commands.Cog):
     elif challenger2 == "":
       challenger2 = ctx.author.mention
     possible_responses = [
-      challenger1 + ' has won!',
-      challenger2 + ' has won!'
+      f'{challenger1} has won!',
+      f'{challenger2} has won!'
     ]    
     winner = random.choice(possible_responses)
     await ctx.send(winner)
