@@ -4,8 +4,6 @@ import os
 import discord
 
 
-
-
 BOT_PREFIX = (";")
 client = Bot(command_prefix=BOT_PREFIX, case_insensitive=True)
 commands = discord.ext.commands
@@ -37,7 +35,7 @@ if __name__ == '__main__':
 async def on_ready():
   user_count = len(client.users)
   server_count = len(client.guilds)
-  await client.change_presence(activity=discord.Game(name='{} users | ;help'.format(user_count, server_count)))
+  await client.change_presence(activity=discord.Game(name=f"{user_count} | ;help"))
   print("Existing Servers:")
   async for guild in client.fetch_guilds():
     print(guild.name)
