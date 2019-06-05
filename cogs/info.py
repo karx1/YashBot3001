@@ -77,7 +77,7 @@ class InfoCog(commands.Cog):
   async def uptime(self, ctx):
     command_time = datetime.datetime.now()
     ut = command_time - c.start_time
-    await ctx.send("This bot has been alive for {}".format(ut))
+    await ctx.send(f"This bot has been alive for {ut}")
 
 def setup(client):
   client.add_cog(InfoCog(client))
