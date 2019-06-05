@@ -1,4 +1,3 @@
-#this is the flask code to keep the bot running 24/7
 from flask import Flask
 from threading import Thread
 from flask import render_template
