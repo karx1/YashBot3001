@@ -1,7 +1,5 @@
 import discord
 from discord.ext import commands
-from discord_interactive import Page, Help
-import time
 import datetime
 
 class counter:
@@ -43,30 +41,6 @@ class InfoCog(commands.Cog):
     await ctx.send(embed=embed)
 
   
-
-
-  @commands.command()
-  async def help(self, ctx):
-    root = Page("Welcome to YashBot3001!\nPing Y45HK4R4ND1K4R#9565 on the testing server if you have any issues. Use the reactions to navigate through this menu!")
-    page1 = Page("**YashBot3001 Help**\nFun:\n`;8ball [question]`\n`;bully <target>`\n`;kill <target>`\n`;cat`\n`;dice`\n`;dog`\n`;fight <challenger1> <challenger2>`\n`;hamster`\n`;hello`\n`;ping`\n`;rps [choice]`\n`;song`\n`;thanos <target>`\n`;coin`\n**Anything in [] is required. Anything in <> is optional.**")
-    page2 = Page("**YashBot3001 Help**\nMath:\n`;add [number1] [number2]`\n`;cos [number]`\n`;divide [number1] [number2]`\n`;exp [number1] [number2]`\n`;factorial [number]`\n`;multiply [number1] [number2]`\n`;root [number]`\n`;sine [number]`\n`;square [number]`\n`;subtract [number1] [number2]`\n`;tan [number]`\n**Anything in [] is required. Anything in <> is optional.**")
-    page3 = Page("**YashBot3001 Help**\nInfo:\n`;help`\n`;info`\n`;invite`\n`;uptime`\n`;source`\n`;guilds`\n`;users`\n**Anything in [] is required. Anything in <> is optional.**")
-    page4 = Page("**YashBot3001 Help**\nText Manipulation:\n`;secret <message>`\n`;echo <message>`\n`;embed <message>`\n`;upper [message]`\n`;lower [message]`\n`;reverse [message]`\n`;tts [message]` <------ Works best on computer\n`;ascii [message]` <------ Works best with short messages\n**Anything in [] is required. Anything in <> is optional.**")
-    page5 = Page("**YashBot3001 Help**\nImage Manipulation:\n`;kirby [message]`\n`;lisa [message]`\n`;pewds [message]`\n`;gru [message]`\n`;linus [message]`\n`;trump [message]`\n`;elon [message]`\n**Anything in [] is required. Anything in <> is optional.**")
-    page6 = Page("**YashBot3001 Help**\nTesting Server Only Commands:\n*These commands only work in the testing server. Join it here: https://discord.gg/hG6RDZz*\n`;subscribe`\n`;polls`\n`;unsubscribe`\n**Anything in [] is required. Anything in <> is optional.**")
-    page7 = Page("**YashBot3001 Help**\nWeb:\n`;google [query]`\n`;youtube [query]`\n**Anything in [] is required. Anything in <> is optional.**")
-    page8 = Page("**YashBot3001 Help**\nOther:\n`;bros`\n`;dyt`\n`;enigma`\n`;evrst`\n`;nerdstep`\n**Anything in [] is required. Anything in <> is optional.**")
-    root.link(page1, description="Fun", reaction=u"\U0001F3AE")
-    root.link(page2, description="Math", reaction=u"\U0001F522")
-    root.link(page3, description="Info", reaction=u"\U0001F5DE")
-    root.link(page4, description="Text Manipulation", reaction=u"\U0001F520")
-    root.link(page5, description="Image Manipulation", reaction=u"\U0001F5BC")
-    root.link(page6, description="Testing Server Only", reaction=u"\U0001F6E0")
-    root.link(page7, description="Web", reaction=u"\U0001F4BB")
-    root.link(page8, description="Other", reaction=u"\u2753")
-    h = Help(self.client, root)
-    await ctx.send(f"Check your DM's, {ctx.message.author.mention}!")
-    await h.display(ctx.message.author)
 
   
   @commands.command()
