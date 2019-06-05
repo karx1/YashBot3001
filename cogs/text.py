@@ -13,7 +13,7 @@ class TextCog(commands.Cog):
   async def secret(self, ctx, *, message= ""):
 	  if message is "":
 		  message = ctx.message.author.display_name
-	  await ctx.send("|| {} ||".format(message))
+	  await ctx.send(f"||{message}||")
 
   @commands.command()
   async def embed(self, ctx, *, message=""):
@@ -47,7 +47,7 @@ class TextCog(commands.Cog):
     if inp == "":
       inp = ctx.message.author.display_name
     ascii_banner = figlet_format(inp, font="small")
-    await ctx.send("```{}```".format(ascii_banner))
+    await ctx.send(f"```{ascii_banner}```")
   
 
   @commands.command()
