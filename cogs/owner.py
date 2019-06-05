@@ -20,12 +20,13 @@ class OwnerCog(commands.Cog):
     await channel.send(avy)
     await channel.send(f"Test successful for {name}")
 
-
+#must be used in the guild the channel belongs to.
   @commands.command()
   @is_me()
   async def poll(self, ctx, *, question=""):
     channel = self.client.get_channel(579317022740185098)
-    message = await channel.send(f"@everyone {question}")
+    role = discord.utils.get(ctx.message.guild.roles, name="Polls")
+    message = await channel.send(f"{role.mention} {question}")
     await message.add_reaction(u"\U0001F44D")
     await message.add_reaction(u"\U0001F44E")
 
