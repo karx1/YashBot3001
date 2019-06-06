@@ -23,6 +23,8 @@ extensions = [
   'cogs.events',
   'cogs.info',
   'cogs.image',
+  'cogs.help',
+  'cogs.money'
 ]
 
 if __name__ == '__main__':
@@ -35,7 +37,7 @@ if __name__ == '__main__':
 async def on_ready():
   user_count = len(client.users)
   server_count = len(client.guilds)
-  await client.change_presence(activity=discord.Game(name=f"{user_count} | ;help"))
+  await client.change_presence(activity=discord.Game(name=f"{user_count} users | {server_count} servers"))
   print("Existing Servers:")
   async for guild in client.fetch_guilds():
     print(guild.name)
