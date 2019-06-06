@@ -28,8 +28,8 @@ class HelpCog(commands.Cog):
     root.link(page8, description="Web", reaction=u"\U0001F4BB")
     root.link(page9, description="Other", reaction=u"\u2753")
     h = Help(self.client, root)
-    await h.display(ctx.message.author)
     await ctx.send(f"Check your DMs, {ctx.message.author.mention}!")
+    await h.display(ctx.message.author)    
 
 
   @help.command()
@@ -112,8 +112,8 @@ class HelpCog(commands.Cog):
     root.link(page5, description="ascii", reaction="5\N{combining enclosing keycap}")
     root.link(page6, description="Upper/Lower/Reverse", reaction="6\N{combining enclosing keycap}")
     h = Help(self.client, root)
-    await h.display(ctx.message.author)
     await ctx.send(f"Check your DMs, {ctx.message.author.mention}!")
+    await h.display(ctx.message.author)
 
   @help.command()
   async def image(self, ctx):
