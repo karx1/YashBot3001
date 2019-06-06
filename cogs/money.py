@@ -41,7 +41,7 @@ class MoneyCog(commands.Cog):
     def check(m):
       return m.content == 'yes' and m.channel == ctx.message.channel
     try:
-      accept = await self.client.wait_for('message', timeout=60.0, check=check)
+      accept = await self.client.wait_for('message', timeout=30.0, check=check)
     except asyncio.TimeoutError:
       await ctx.send("I guess not, then.")
     else:
