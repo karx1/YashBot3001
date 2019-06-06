@@ -11,7 +11,7 @@ class MoneyCog(commands.Cog):
 
   @commands.command()
   async def work(self, ctx):
-    salary = random.randint(50, 100)
+    salary = random.randint(25, 75)
     filepath = Path(f"cogs/data/bank/{ctx.message.author.name}.json")
     filepath.touch(exist_ok=True)
     with open(filepath, 'r') as f:
