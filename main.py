@@ -4,8 +4,13 @@ import os
 import discord
 
 
-BOT_PREFIX = (";")
-client = Bot(command_prefix=BOT_PREFIX, case_insensitive=True)
+async def get_prefix(client, message):
+  if message.guild is None:
+    return [";", ""]
+  else:
+    return ";"
+
+client = Bot(command_prefix=get_prefix, case_insensitive=True)
 commands = discord.ext.commands
 
 client.remove_command('help')
