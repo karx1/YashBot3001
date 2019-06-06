@@ -12,7 +12,7 @@ class MoneyCog(commands.Cog):
   @commands.command()
   async def work(self, ctx):
     salary = random.randint(25, 75)
-    filepath = Path(f"cogs/data/bank/{ctx.message.author.name}.json")
+    filepath = Path(f"cogs/data/out/{ctx.message.author.id}.json")
     filepath.touch(exist_ok=True)
     with open(filepath, 'r') as f:
       bank = json.load(f)
@@ -28,7 +28,7 @@ class MoneyCog(commands.Cog):
   
   @commands.command(aliases=["bal", "wallet", "money"])
   async def balance(self, ctx):
-    filepath = Path(f"cogs/data/bank/{ctx.message.author.name}.json")
+    filepath = Path(f"cogs/data/out/{ctx.message.author.id}.json")
     filepath.touch(exist_ok=True)
     with open(filepath, 'r') as f:
       bank = json.load(f)
@@ -41,7 +41,7 @@ class MoneyCog(commands.Cog):
     def check(m):
       return m.content == 'yes' and m.channel == ctx.message.channel
     try:
-      accept = await self.client.wait_for('message', timeout=30.0, check=check)
+      await self.client.wait_for('message', timeout=30.0, check=check)
     except asyncio.TimeoutError:
       await ctx.send("I guess not, then.")
     else:
@@ -49,11 +49,12 @@ class MoneyCog(commands.Cog):
         "owner": ctx.message.author.name,
         "balance": 0
       }
-      filepath = Path(f"cogs/data/bank/{ctx.message.author.name}.json")
+      filepath = Path(f"cogs/data/out/{ctx.message.author.id}.json")
       filepath.touch(exist_ok=True)
       with open(filepath, 'w') as f:
         json.dump(depo, f)
       await ctx.send(f"{ctx.message.author.mention} has begun their journey!")
+
 
 def setup(client):
   client.add_cog(MoneyCog(client))
