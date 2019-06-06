@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import time
 import datetime
 
 class EventCog(commands.Cog):
@@ -11,21 +10,17 @@ class EventCog(commands.Cog):
   async def on_guild_join(self, guild):
     channel = self.client.get_channel(580383812438065193)
     time = datetime.datetime.now()
-    await channel.send("Joined server {} at {}".format(guild, time))
+    await channel.send(f"Joined server {guild} at {time}")
 
   @commands.Cog.listener()
   async def on_guild_remove(self, guild):
     channel = self.client.get_channel(580383812438065193)
     time = datetime.datetime.now()
-    await channel.send("Left server {} at {}".format(guild, time))
+    await channel.send(f"Left server {guild} at {time}")
 
   @commands.Cog.listener()
   async def on_command_error(self, ctx, error):
-    name = str(ctx.message.author)
-    stuff = ctx.message.content
-    server = ctx.message.guild
     error = str(error)
-    channel = self.client.get_channel(580383812438065193)
     f = open('log.txt', 'a')
     f.write("Error: {}\n".format(error))
     f.close()
@@ -33,6 +28,8 @@ class EventCog(commands.Cog):
     print(fi.read())
     if "is not found" in error:
       return
+    elif "JSONDecodeError" in error:
+      await ctx.send(f"You have not set up your bank yet, {ctx.message.author.mention}! Use `;start` to begin!")
     else:
       await ctx.send("Error: {}".format(error))
 
