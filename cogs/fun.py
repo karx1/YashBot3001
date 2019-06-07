@@ -2,6 +2,10 @@ import discord
 from discord.ext import commands
 import random
 import datetime
+import asyncio
+from random import getrandbits
+from ipaddress import IPv4Address, IPv6Address
+from random import randint
 
 class FunCog(commands.Cog):
   def __init__(self, client):
@@ -203,6 +207,56 @@ class FunCog(commands.Cog):
     embed.set_author(name=name, icon_url=avy)
     embed.set_footer(text=datetime.datetime.now())
     await ctx.send(embed=embed)
+
+  
+  @commands.command()
+  async def hack(self, ctx, member: discord.Member):
+    v = 4
+    if v == 4:
+      bits = getrandbits(32) # generates an integer with 32 random bits
+      addr = IPv4Address(bits) # instances an IPv4Address object from those bits
+      a = str(addr) # get the IPv4Address object's string representation
+    elif v == 6:
+      bits = getrandbits(128) # generates an integer with 128 random bits
+      addr = IPv6Address(bits) # instances an IPv6Address object from those bits
+      # .compressed contains the short version of the IPv6 address
+      # str(addr) always returns the short address
+      # .exploded is the opposite of this, always returning the full address with all-zero groups and so on
+      a = addr.compressed
+    def random_with_N_digits(n):
+      range_start = 10**(n-1)
+      range_end = (10**n)-1
+      return randint(range_start, range_end)
+    f = random_with_N_digits(4)
+    b = member.name.lower()
+    b = b.replace(" ", "")
+    j = random_with_N_digits(5)
+    if j > 65536:
+      j = 65536
+    message = await ctx.send("```css\nHacking...```")
+    await asyncio.sleep(2)
+    await message.edit(content="```css\nHacking...\nMember found!```")
+    await asyncio.sleep(2)
+    await message.edit(content="```css\nHacking...\nMember found!\nGetting ip...```")
+    await asyncio.sleep(2)
+    await message.edit(content="```css\nHacking...\nMember found!\nGetting ip...\nip found```")
+    await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address```")
+    await asyncio.sleep(2)
+    await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...```")
+    await asyncio.sleep(2)
+    await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com```")
+    await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com\npassword=******```")
+    await asyncio.sleep(2)
+    await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com\npassword=******\nDeleting files...```")
+    await asyncio.sleep(2)
+    await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com\npassword=******\nDeleting files...\nFiles deleted.```")
+    await asyncio.sleep(2)
+    await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com\npassword=******\nDeleting files...\nFiles deleted.\nClosing Connection...```")
+    await asyncio.sleep(2)
+    await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com\npassword=******\nDeleting files...\nFiles deleted.\nClosing Connection...\nConnection Closed.```")
+    await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com\npassword=******\nDeleting files...\nFiles deleted.\nClosing Connection...\nConnection Closed.\nExited port {j}```")
+    await asyncio.sleep(2)
+    await ctx.send(f"Finished hacking user **{member.display_name}**.")
 
 def setup(client):
   client.add_cog(FunCog(client))
