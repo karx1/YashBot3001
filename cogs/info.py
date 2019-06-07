@@ -53,12 +53,12 @@ class InfoCog(commands.Cog):
     ut = command_time - c.start_time
     await ctx.send(f"This bot has been alive for {ut}")
 
-  @commands.command()
+  @commands.command(aliases=["servers"])
   async def guilds(self, ctx):
     server_count = len(self.client.guilds)
     await ctx.send(f"I am in **{server_count}** guilds!")
 
-  @commands.command()
+  @commands.command(aliases=["members"])
   async def users(self, ctx):
     user_count = len(self.client.users)
     await ctx.send(f"I can see **{user_count}** users!")
