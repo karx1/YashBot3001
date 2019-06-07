@@ -122,8 +122,12 @@ class FunCog(commands.Cog):
 
   @commands.command()
   async def ping(self, ctx):
-    await ctx.send("**Ping Pong Ping Pong** " + ":ping_pong:")
-    print("user has pinged")
+    w = self.client.latency
+    w = w * 1000
+    w = round(w, 4)
+    m = await ctx.send("Pong!")
+    await m.edit(content=f"Pong! Latency is {w} ms.\nhttps://media.giphy.com/media/pWncxUrrNHdny/giphy.gif")
+
 
   @commands.command()
   async def thanos(self, ctx, *, target=""):
