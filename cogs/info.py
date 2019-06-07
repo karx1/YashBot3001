@@ -34,7 +34,7 @@ class InfoCog(commands.Cog):
     embed.add_field(name="YashBot3001 info", value="This bot was made by Yash Karandikar. It has 1015 lines of code, is written in Python 3.7, and uses discord.py 1.1.1.\nEnjoy!", inline=False)
     embed.add_field(name="Prefix", value=";", inline=False)
     embed.add_field(name="Changelog", value="[Check out the changelog here!](https://tinyurl.com/YashBot3001)", inline=False)
-    embed.add_field(name="Users", value="This bot can see {} users and {} servers.".format(users, servers))
+    embed.add_field(name="Users", value=f"This bot can see {users} users and {servers} servers.")
     embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
     embed.set_author(name=name, icon_url=avy)
     embed.set_footer(text=datetime.datetime.now())
