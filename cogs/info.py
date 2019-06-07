@@ -16,7 +16,7 @@ class InfoCog(commands.Cog):
     name = ctx.message.author.display_name
     avy = str(ctx.message.author.avatar_url)
     embed=discord.Embed(title="Invite YashBot 3001", description="", color=0x00ff00)
-    embed.add_field(name="YashBot3001", value="[Invite YashBot3001](https://yashbot3001--yashkarandikar.repl.co/invite)", inline=False)
+    embed.add_field(name="YashBot3001", value="[Invite YashBot3001](https://yashbot3001--nerdstep710.repl.co/invite)", inline=False)
     embed.add_field(name="Uno Reverse Card", value="[Invite Uno Reverse Card](https://discordapp.com/api/oauth2/authorize?scope=bot&client_id=565565207326490624)", inline=False)
     embed.add_field(name="Support Server", value="[Join the Support Server](https://discord.gg/hG6RDZz)")
     embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
@@ -33,7 +33,7 @@ class InfoCog(commands.Cog):
     embed=discord.Embed(title="", description="", color=0x00ff00)
     embed.add_field(name="YashBot3001 info", value="This bot was made by Yash Karandikar. It has 1015 lines of code, is written in Python 3.7, and uses discord.py 1.1.1.\nEnjoy!", inline=False)
     embed.add_field(name="Prefix", value=";", inline=False)
-    embed.add_field(name="Changelog", value="[Check out the changelog here!](https://tinyurl.com/YashBot3001)", inline=False)
+    embed.add_field(name="Changelog", value="[Check out the changelog here!](https://tinyurl.com/yashrobot)", inline=False)
     embed.add_field(name="Users", value=f"This bot can see {users} users and {servers} servers.")
     embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
     embed.set_author(name=name, icon_url=avy)
