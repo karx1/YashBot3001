@@ -77,10 +77,12 @@ class FunCog(commands.Cog):
     await ctx.send(f"{target} was killed!")
 
   @commands.command()
-  async def rate(self, ctx):
+  async def rate(self, ctx, *, member: discord.Member = None):
+    if member is None:
+      member = ctx.message.author
     possible_responses = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
     rating = random.choice(possible_responses)
-    await ctx.send(f"I rate {ctx.author.mention} {rating} out of 10!")
+    await ctx.send(f"I rate {member.mention} {rating} out of 10!")
 
 
   @commands.command()
@@ -210,9 +212,9 @@ class FunCog(commands.Cog):
 
   
   @commands.command()
-  async def hack(self, ctx, member: discord.Member = None):
-    if member is None:
-      member = ctx.message.author
+  async def hack(self, ctx, *, target: discord.Member = None):
+    if target is None:
+      target = ctx.message.author
     v = 4
     if v == 4:
       bits = getrandbits(32) # generates an integer with 32 random bits
@@ -230,7 +232,7 @@ class FunCog(commands.Cog):
       range_end = (10**n)-1
       return randint(range_start, range_end)
     f = await random_with_N_digits(4)
-    b = member.name.lower()
+    b = target.name.lower()
     b = b.replace(" ", "")
     j = await random_with_N_digits(5)
     if j > 65535:
@@ -258,7 +260,7 @@ class FunCog(commands.Cog):
     await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com\npassword=******\nDeleting files...\nFiles deleted.\nClosing Connection...\nConnection Closed.```")
     await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com\npassword=******\nDeleting files...\nFiles deleted.\nClosing Connection...\nConnection Closed.\nExited port {j}```")
     await asyncio.sleep(2)
-    await ctx.send(f"Finished hacking user **{member.display_name}**.")
+    await ctx.send(f"Finished hacking user **{target.display_name}**.")
 
 def setup(client):
   client.add_cog(FunCog(client))
