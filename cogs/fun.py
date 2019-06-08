@@ -210,7 +210,9 @@ class FunCog(commands.Cog):
 
   
   @commands.command()
-  async def hack(self, ctx, member: discord.Member):
+  async def hack(self, ctx, member: discord.Member = None):
+    if member is None:
+      member = ctx.message.author
     v = 4
     if v == 4:
       bits = getrandbits(32) # generates an integer with 32 random bits
@@ -223,16 +225,16 @@ class FunCog(commands.Cog):
       # str(addr) always returns the short address
       # .exploded is the opposite of this, always returning the full address with all-zero groups and so on
       a = addr.compressed
-    def random_with_N_digits(n):
+    async def random_with_N_digits(n):
       range_start = 10**(n-1)
       range_end = (10**n)-1
       return randint(range_start, range_end)
-    f = random_with_N_digits(4)
+    f = await random_with_N_digits(4)
     b = member.name.lower()
     b = b.replace(" ", "")
-    j = random_with_N_digits(5)
-    if j > 65536:
-      j = 65536
+    j = await random_with_N_digits(5)
+    if j > 65535:
+      j = 65535
     message = await ctx.send("```css\nHacking...```")
     await asyncio.sleep(2)
     await message.edit(content="```css\nHacking...\nMember found!```")
