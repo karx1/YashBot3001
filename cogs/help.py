@@ -9,7 +9,7 @@ class HelpCog(commands.Cog):
   @commands.group(invoke_without_command=True)
   async def help(self, ctx):
     root = Page("Welcome to YashBot3001!\nPing Y45HK4R4ND1K4R#9565 on the support server if you have any issues. Use ;help <category> to get all the commands in a single category explained in more detail. Use the reactions to navigate through the menus!")
-    page1 = Page("**YashBot3001 Help**\nFun:\n`;8ball [question]`\n`;bully <target>`\n`;kill <target>`\n`;cat`\n`;dice`\n`;dog`\n`;fight <challenger1> <challenger2>`\n`;hamster`\n`;ping`\n`;rps [choice]`\n`;song`\n`;thanos <target>`\n`;coin`\n`;hack [member]`\n**Anything in [] is required. Anything in <> is optional.**")
+    page1 = Page("**YashBot3001 Help**\nFun:\n`;8ball [question]`\n`;bully <target>`\n`;kill <target>`\n`;cat`\n`;dice`\n`;dog`\n`;fight <challenger1> <challenger2>`\n`;hamster`\n`;ping`\n`;rps [choice]`\n`;song`\n`;thanos <target>`\n`;coin`\n`;hack <target>`\n**Anything in [] is required. Anything in <> is optional.**")
     page2 = Page("**YashBot3001 Help**\nMath:\n`;add [number1] [number2]`\n`;cos [number]`\n`;divide [number1] [number2]`\n`;exp [number1] [number2]`\n`;factorial [number]`\n`;multiply [number1] [number2]`\n`;root [number]`\n`;sine [number]`\n`;square [number]`\n`;subtract [number1] [number2]`\n`;tan [number]`\n**Anything in [] is required. Anything in <> is optional.**")
     page3 = Page("**YashBot3001 Help**\nInfo:\n`;help`\n`;info`\n`;invite`\n`;uptime`\n`;source`\n`;guilds`\n`;users`\n**Anything in [] is required. Anything in <> is optional.**")
     page4 = Page("**YashBot3001 Help**\nText Manipulation:\n`;secret <message>`\n`;echo <message>`\n`;embed <message>`\n`;upper [message]`\n`;lower [message]`\n`;reverse [message]`\n`;tts [message]` <------ Works best on computer\n`;ascii [message]` <------ Works best with short messages\n**Anything in [] is required. Anything in <> is optional.**")
@@ -43,7 +43,7 @@ class HelpCog(commands.Cog):
     page6 = Page("`;cat/;dog/;hamster`\nSends you a cute GIF of a dog/cat/hamster")
     page7 = Page("`;thanos`\nDetermines whether or not you were killed in the Snap")
     page8 = Page("`;rps [choice]`\nRock Paper Scissors in Discord!")
-    page9 = Page("`;hack [member]`\nHacks someone")
+    page9 = Page("`;hack <target>`\nHacks someone")
     root.link(page1, description="8ball", reaction="1\N{combining enclosing keycap}")
     root.link(page2, description="Fight", reaction="2\N{combining enclosing keycap}")
     root.link(page3, description="Kill/Bully", reaction="3\N{combining enclosing keycap}")
