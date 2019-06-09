@@ -29,7 +29,6 @@ extensions = [
   'cogs.info',
   'cogs.image',
   'cogs.help',
-  'cogs.money'
 ]
 
 if __name__ == '__main__':
