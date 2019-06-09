@@ -1,7 +1,8 @@
+import discord
 from discord.ext.commands import Bot
 from keep_alive import keep_alive
 import os
-import discord
+
 
 
 async def get_prefix(client, message):
