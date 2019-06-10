@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import math
 
+
+
 class MathCog(commands.Cog):
   def __init__(self, client):
     self.client = client
@@ -28,12 +30,15 @@ class MathCog(commands.Cog):
 	  multiplied_value = float(number1) * float(number2)
 	  await ctx.send(f"{number1} multiplied by {number2} is {multiplied_value}")
   
-  @commands.command()
+  @commands.command(aliases=["fact"])
   async def factorial(self, ctx, number=None):
     if number is None:
       await ctx.send("You must provide a number!")
       return
     number = int(number)
+    if number > 802:
+      await ctx.send("Sorry, but your number is too big! We don't want Discord getting mad at us, after all.")
+      return
     answer = math.factorial(number)
     await ctx.send(f"{number} factorial is {answer}")
 
