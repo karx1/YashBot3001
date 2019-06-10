@@ -1,8 +1,7 @@
-from flask import Flask
+from flask import Flask, render_template
 from threading import Thread
-from flask import render_template
 
-app = Flask('')
+app = Flask('Yashot3001')
 
 @app.route('/')
 def home():
