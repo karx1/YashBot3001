@@ -4,13 +4,11 @@ from googlesearch import search
 import urllib.request
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
+import wikipedia
 
 class WebCog(commands.Cog):
   def __init__(self, client):
     self.client = client
-
-
-
 
 
   @commands.command()
@@ -49,6 +47,17 @@ class WebCog(commands.Cog):
     async with ctx.typing():
       ytasync = await self.client.loop.run_in_executor(ThreadPoolExecutor(), ytsync)
       await ctx.send(ytasync)
+
+  @commands.command(aliases=["wikipedia", "define"])
+  async def wiki(self, ctx, *, q=""):
+    def wsync(query=q):
+      if query is "":
+        return "You must provide a search term, {ctx.message.author.mention}!"
+      url = wikipedia.summary(query)
+      return url
+    wasync = await self.client.loop.run_in_executor(ThreadPoolExecutor(), wsync)
+    await ctx.send(wasync)
+
 
 def setup(client):
   client.add_cog(WebCog(client))
