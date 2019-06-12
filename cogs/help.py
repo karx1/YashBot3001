@@ -148,7 +148,7 @@ class HelpCog(commands.Cog):
     page3 = Page("`;wiki [query]`\nSearches Wikipedia")
     root.link(page1, description="Google", reaction="1\N{combining enclosing keycap}")
     root.link(page2, description="YouTube", reaction="2\N{combining enclosing keycap}")
-    root.link(page3, description="Wiki", reaction="3\N{combining enclosing keycap}")
+    root.link(page3, description="Wikipedia", reaction="3\N{combining enclosing keycap}")
     h = Help(self.client, root)
     await ctx.send(f"Check your DMs, {ctx.message.author.mention}!")
     await h.display(ctx.message.author)
