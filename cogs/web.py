@@ -58,7 +58,7 @@ class WebCog(commands.Cog):
     if query is "":
       await ctx.send("You must provide a search term, {ctx.message.author.mention}!")
     c = wikipedia.summary(query)
-    content = f"{c}..."
+    content = f"{c}"
     if len(content) > 2000:
       h = "\n".join(textwrap.wrap(content, width=143))
       async with aiohttp.ClientSession() as session:
