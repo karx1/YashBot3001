@@ -5,6 +5,8 @@ import urllib.request
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
 import wikipedia
+import aiohttp
+import textwrap
 
 class WebCog(commands.Cog):
   def __init__(self, client):
@@ -18,7 +20,7 @@ class WebCog(commands.Cog):
       name_plain = ctx.message.author.display_name
       if query is "":
         return f"You must provide a search term, {name_plain}!"
-      elif query in ["thanos", "Thanos"]:
+      elif query.lower() is "thanos":
         query = "who is thanos"
       for j in search(query, tld="com", num=1, stop=1):
         print(f"{name} has searched for '{query}' and it returned {j}")
@@ -54,12 +56,18 @@ class WebCog(commands.Cog):
   @commands.command(aliases=["wikipedia", "define"])
   async def wiki(self, ctx, *, query=""):
     if query is "":
-      return "You must provide a search term, {ctx.message.author.mention}!"
-    content = wikipedia.summary(query)
-    if len(content) > 1991:
-      await ctx.send(f"Your  result was too long, so I'm giving you the link instead: https://en.wikipedia.org/wiki/{content}")
+      await ctx.send("You must provide a search term, {ctx.message.author.mention}!")
+    c = wikipedia.summary(query)
+    content = f"{c}..."
+    if len(content) > 2000:
+      h = "\n".join(textwrap.wrap(content, width=143))
+      async with aiohttp.ClientSession() as session:
+        resp = await session.post('https://mystb.in/documents', data=h.encode())
+        f = await resp.json()
+        url = f'https://mystb.in/{f["key"]}'
+        await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
     else:
-        await ctx.send(content)
+      await ctx.send(content)
 
 
 def setup(client):
