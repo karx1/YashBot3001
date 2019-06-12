@@ -48,15 +48,18 @@ class WebCog(commands.Cog):
       ytasync = await self.client.loop.run_in_executor(ThreadPoolExecutor(), ytsync)
       await ctx.send(ytasync)
 
+
+    
+
   @commands.command(aliases=["wikipedia", "define"])
-  async def wiki(self, ctx, *, q=""):
-    def wsync(query=q):
-      if query is "":
-        return "You must provide a search term, {ctx.message.author.mention}!"
-      url = wikipedia.summary(query)
-      return url
-    wasync = await self.client.loop.run_in_executor(ThreadPoolExecutor(), wsync)
-    await ctx.send(wasync)
+  async def wiki(self, ctx, *, query=""):
+    if query is "":
+      return "You must provide a search term, {ctx.message.author.mention}!"
+    content = wikipedia.summary(query)
+    if len(content) > 1991:
+      await ctx.send(f"Your  result was too long, so I'm giving you the link instead: https://en.wikipedia.org/wiki/{content}")
+    else:
+        await ctx.send(content)
 
 
 def setup(client):
