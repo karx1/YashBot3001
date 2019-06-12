@@ -51,7 +51,7 @@ class FunCog(commands.Cog):
     print("Ready... FIGHT!!!")
     if challenger1 == "":
       challenger2 = ctx.author.mention
-    elif challenger2 == "":
+    if challenger2 == "":
       challenger2 = ctx.author.mention
     possible_responses = [
       f'{challenger1} has won!',
