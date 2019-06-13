@@ -1,8 +1,10 @@
 import discord
 from discord.ext import commands
 from io import BytesIO
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 import textwrap
+import requests
+import matplotlib.pyplot as pp
 
 
 class ImageCog(commands.Cog):
@@ -99,6 +101,43 @@ class ImageCog(commands.Cog):
     photo = draw.text(xy = (30, 75),text="\n".join(textwrap.wrap(sent, width=32)),fill = (0,0,0), font = font)
     save = image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
+
+  @commands.command()
+  async def supreme(self, ctx, *, text=""):
+    c = discord.Colour.from_rgb(255, 0, 0)
+    embed = discord.Embed(title="", description="", colour=c)
+    text = text.replace(" ", "%20")
+    url = f"https://api.alexflipnote.dev/supreme?text={text}"
+    embed.set_image(url=url)
+    await ctx.send(embed=embed)
+
+  @commands.command()
+  async def deepfry(self, ctx, *, member: discord.Member = None):
+    member = member or ctx.message.author
+    m = member.avatar_url_as(format='png')
+    m = await m.read()
+    im = pp.imread(BytesIO(m), 'RGBA')
+    im2 = Image.fromarray(im)
+    contrast = ImageEnhance.Contrast(im2)
+    im2 = contrast.enhance(1000)
+    sharpness = ImageEnhance.Sharpness(im2)
+    im2 = sharpness.enhance(1000)
+    color = ImageEnhance.Color(im2)
+    im2 = color.enhance(1000)
+    brightness = ImageEnhance.Brightness(im2)
+    im2 = brightness.enhance(1000)
+    im2.save('cogs/data/out/out.png')
+    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+
+  @commands.command()
+  async def sad(self, ctx, *, member: discord.Member = None):
+    member = member or ctx.message.author
+    i = member.avatar_url_as(format=None, static_format='png')
+    j = await i.read()
+    io = BytesIO(j)
+    img = Image.open(io).convert('L')
+    img.save('cogs/data/out/out.png')
+    await ctx.send(file=discord.File('cogs/data/out/out.png'))
 
 def setup(client):
   client.add_cog(ImageCog(client))
