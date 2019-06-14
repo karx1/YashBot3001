@@ -139,7 +139,7 @@ class ImageCog(commands.Cog):
     await ctx.send(file=discord.File('cogs/data/out/out.png'))
 
   @commands.command()
-  async def emboss(self, ctx, member: discord.Member = None):
+  async def emboss(self, ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
     i = member.avatar_url_as(format='png')
     j = await i .read()
