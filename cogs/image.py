@@ -1,9 +1,10 @@
 import discord
 from discord.ext import commands
 from io import BytesIO
-from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageFilter
+from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageFilter, ImageOps, ImageMath
 import textwrap
 import matplotlib.pyplot as pp
+
 
 
 class ImageCog(commands.Cog):
@@ -142,12 +143,32 @@ class ImageCog(commands.Cog):
   async def emboss(self, ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
     i = member.avatar_url_as(format='png')
-    j = await i .read()
+    j = await i.read()
     io = BytesIO(j)
     img = Image.open(io)
     im1 = img.filter(ImageFilter.EMBOSS)
     im1.save('cogs/data/out/out.png')
     await ctx.send(file=discord.File('cogs/data/out/out.png'))
+
+  @commands.command()
+  async def invert(self, ctx, *, member: discord.Member = None):
+    async with ctx.typing():
+      member = member or ctx.message.author
+      i = member.avatar_url_as(format='png')
+      j = await i.read()
+      io = BytesIO(j)
+      image = Image.open(io)
+      if image.mode == 'RGBA':
+        r,g,b,a = image.split()
+        rgb_image = Image.merge('RGB', (r,g,b))
+        inverted_image = ImageOps.invert(rgb_image)
+        inverted_image.save('cogs/data/out/out.png')
+        await ctx.send(file=discord.File('cogs/data/out/out.png'))
+      else:
+        im1 = ImageOps.invert(image)
+        im1.save('cogs/data/out/out.png')
+        await ctx.send(file=discord.File('cogs/data/out/out.png'))
+
 
 def setup(client):
   client.add_cog(ImageCog(client))
