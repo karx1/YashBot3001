@@ -1,9 +1,8 @@
 import discord
 from discord.ext import commands
 from io import BytesIO
-from PIL import Image, ImageFont, ImageDraw, ImageEnhance
+from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageFilter
 import textwrap
-import requests
 import matplotlib.pyplot as pp
 
 
@@ -18,7 +17,7 @@ class ImageCog(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (100,100),text = "\n".join(textwrap.wrap(sent, width=25)),fill = (0,0,0), font = font)
-    save = image.save('cogs/data/out/out.png')
+    image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
   @commands.command()
@@ -28,7 +27,7 @@ class ImageCog(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (200,100),text = "\n".join(textwrap.wrap(sent, width=19)),fill = (0,0,0), font = font)
-    save = image.save('cogs/data/out/out.png')
+    image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
   @commands.command(aliases=["pewdiepie", 'felix'])
@@ -38,7 +37,7 @@ class ImageCog(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 18)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (210, 50),text = "\n".join(textwrap.wrap(sent, width=6)),fill = (0,0,0), font = font)
-    save = image.save('cogs/data/out/out.png')
+    image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
   @commands.command()
@@ -48,7 +47,7 @@ class ImageCog(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 18)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (180, 50),text ="\n".join(textwrap.wrap(sent, width=10)),fill = (0,0,0), font = font)
-    save = image.save('cogs/data/out/out.png')
+    image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
   @commands.command()
@@ -58,7 +57,7 @@ class ImageCog(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 72)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (575, 100),text="\n".join(textwrap.wrap(sent, width=15)),fill = (0,0,0), font = font)
-    save = image.save('cogs/data/out/out.png')
+    image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
   @commands.command()
@@ -68,7 +67,7 @@ class ImageCog(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (375, 300),text="\n".join(textwrap.wrap(sent, width=16)),fill = (0,0,0), font = font)
-    save = image.save('cogs/data/out/out.png')
+    image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
   @commands.command()
@@ -78,7 +77,7 @@ class ImageCog(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (225, 100),text="\n".join(textwrap.wrap(sent, width=11)),fill = (0,0,0), font = font)
-    save = image.save('cogs/data/out/out.png')
+    image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
 
@@ -89,7 +88,7 @@ class ImageCog(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 92)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (710, 95),text="\n".join(textwrap.wrap(sent, width=10)),fill = (0,0,0), font = font)
-    save = image.save('cogs/data/out/out.png')
+    image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
   @commands.command(aliases=['board'])
@@ -99,7 +98,7 @@ class ImageCog(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (30, 75),text="\n".join(textwrap.wrap(sent, width=32)),fill = (0,0,0), font = font)
-    save = image.save('cogs/data/out/out.png')
+    image.save('cogs/data/out/out.png')
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
   @commands.command()
@@ -132,11 +131,22 @@ class ImageCog(commands.Cog):
   @commands.command()
   async def sad(self, ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
-    i = member.avatar_url_as(format=None, static_format='png')
+    i = member.avatar_url_as(format='png')
     j = await i.read()
     io = BytesIO(j)
     img = Image.open(io).convert('L')
     img.save('cogs/data/out/out.png')
+    await ctx.send(file=discord.File('cogs/data/out/out.png'))
+
+  @commands.command()
+  async def emboss(self, ctx, member: discord.Member = None):
+    member = member or ctx.message.author
+    i = member.avatar_url_as(format='png')
+    j = await i .read()
+    io = BytesIO(j)
+    img = Image.open(io)
+    im1 = img.filter(ImageFilter.EMBOSS)
+    im1.save('cogs/data/out/out.png')
     await ctx.send(file=discord.File('cogs/data/out/out.png'))
 
 def setup(client):
