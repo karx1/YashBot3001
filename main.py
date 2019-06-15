@@ -30,6 +30,7 @@ extensions = [
   'cogs.info',
   'cogs.image',
   'cogs.help',
+  'cogs.user'
 ]
 
 if __name__ == '__main__':
