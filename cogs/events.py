@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 import datetime
-from discord.ext import tasks
 
 class EventCog(commands.Cog):
   def __init__(self, client):
@@ -29,14 +28,13 @@ class EventCog(commands.Cog):
     print(fi.read())
     if "is not found" in error:
       return
+    elif "check functions for" in error:
+      await ctx.send("It looks like you can't use this command. If you believe this is a mistake, ask for help in the support server!")
+    elif "Results only has 0 hits" in error:
+      await ctx.send("It looks like this tag does not exist. Use `;make` to create it!")
     else:
       await ctx.send("Error: {}".format(error))
 
-  
-  @tasks.loop(minutes=5.0)
-  async def nodown(self):
-    channel = self.client.get_channel(587435285692809216)
-    await channel.send("Ping!")
 
 def setup(client):
   client.add_cog(EventCog(client))
