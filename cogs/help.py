@@ -176,6 +176,9 @@ class HelpCog(commands.Cog):
     root.link(page3, description="Edit", reaction="3\N{combining enclosing keycap}")
     root.link(page4, description="Delete", reaction="4\N{combining enclosing keycap}")
     root.link(page5, description="Taglist", reaction="5\N{combining enclosing keycap}")
+    h = Help(self.client, root)
+    await ctx.send(f"Check your DMs, {ctx.message.author.mention}!")
+    await h.display(ctx.message.author)
     
 
 def setup(client):
