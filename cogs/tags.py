@@ -56,19 +56,21 @@ class Tags(commands.Cog):
 
   @commands.command()
   async def taglist(self, ctx):
-    embed = discord.Embed(title="Tag List", description="", colour=0x00ff00)
     if not os.path.exists("index"):
       os.mkdir("index")
       ix = create_in('index', self.schema)
       ix = open_dir('index')
     else:
       ix = open_dir("index")
+    x = []
     with ix.searcher() as searcher:
       results = searcher.search(Every('title'))
+      i = 0
       for result in results:
+        i += 1
         title = result['title']
-        editor = result['editor']
-        embed.add_field(name=title, value=f'Last edited by: {editor}', inline=False)
+        x.append(f"{i}. {title}")
+    embed = discord.Embed(title="Tag List", description="\n".join(x), colour=0x00ff00)
     await ctx.send(embed=embed)
 
   @commands.command()
@@ -83,6 +85,25 @@ class Tags(commands.Cog):
     writer.delete_by_term('path', name)
     writer.commit()
     await ctx.send(f"Deleted tag {name}")
+
+  @commands.command()
+  async def taginfo(self, ctx, *, name):
+    if not os.path.exists('index'):
+      os.mkdir('index')
+      ix = create_in('index', self.schema)
+      ix = open_dir('index')
+    else:
+      ix = open_dir('index')
+    with ix.searcher() as searcher:
+      parser = QueryParser('title', schema=ix.schema)
+      query = parser.parse(name)
+      results = searcher.search(query)
+      title = results[0]['title']
+      editor = results[0]['editor']
+      embed = discord.Embed(title="Tag Info", description="", color=0x00ff00)
+      embed.add_field(name="Title", value=title)
+      embed.add_field(name="Last edited by", value=editor, inline=False)
+      await ctx.send(embed=embed)
 
 def setup(client):
   client.add_cog(Tags(client))
