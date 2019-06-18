@@ -16,7 +16,8 @@ class HelpCog(commands.Cog):
     page5 = Page("**YashBot3001 Help**\nImage Manipulation:\n`;kirby [message]`\n`;lisa [message]`\n`;pewds [message]`\n`;gru [message]`\n`;linus [message]`\n`;trump [message]`\n`;elon [message]`\n`;supreme [text]`\n`;deepfry <member>`\n`;sad <member>`\n`;emboss <member>`\n`;invert <member>`\n**Anything in [] is required. Anything in <> is optional.**")  
     page6 = Page("**YashBot3001 Help**\nSupport Server Only Commands:\n*These commands only work in the support server. Join it here: https://discord.gg/hG6RDZz*\n`;subscribe`\n`;polls`\n`;unsubscribe`\n**Anything in [] is required. Anything in <> is optional.**")
     page7 = Page("**YashBot3001 Help**\nWeb:\n`;google [query]`\n`;youtube [query]`\n`;wiki [query]`\n**Anything in [] is required. Anything in <> is optional.**")
-    page8 = Page("**YashBot3001 Help**\nOther:\n`;bros`\n`;dyt`\n`;enigma`\n`;evrst`\n`;nerdstep`\n**Anything in [] is required. Anything in <> is optional.**")
+    page8 = Page("**YashBot3001 Help**\nTags:\n`;make [name] [content]`\n`;show [name]`\n`;edit [name] [content]`\n`;delete [name]`\n`;taglist`\n**Anything in [] is required. Anything in <> is optional.**")    
+    page9 = Page("**YashBot3001 Help**\nOther:\n`;bros`\n`;dyt`\n`;enigma`\n`;evrst`\n`;nerdstep`\n**Anything in [] is required. Anything in <> is optional.**")
     root.link(page1, description="Fun", reaction=u"\U0001F3AE")
     root.link(page2, description="Math", reaction=u"\U0001F522")
     root.link(page3, description="Info", reaction=u"\U0001F5DE")
@@ -24,7 +25,8 @@ class HelpCog(commands.Cog):
     root.link(page5, description="Image Manipulation", reaction=u"\U0001F5BC")
     root.link(page6, description="Support Server Only", reaction=u"\U0001F6E0")
     root.link(page7, description="Web", reaction=u"\U0001F4BB")
-    root.link(page8, description="Other", reaction=u"\u2753")
+    root.link(page8, description="Tags", reaction=u"\U0001F4CC")
+    root.link(page9, description="Other", reaction=u"\u2753")
     h = Help(self.client, root)
     await ctx.send(f"Check your DMs, {ctx.message.author.mention}!")
     await h.display(ctx.message.author)    
@@ -161,6 +163,20 @@ class HelpCog(commands.Cog):
     await ctx.send(f"Check your DMs, {ctx.message.author.mention}!")
     await h.display(ctx.message.author)
 
+  @help.command()
+  async def tag(self, ctx):
+    root = Page("These are all the commands in the `tag` category. Use the reactions to navigate.")
+    page1 = Page("`;make [name] [content]`\nMakes a tag")
+    page2 = Page("`;show [name]`\nShows a tag")
+    page3 = Page("`;edit [name] [content]`\nEdits an existing tag")
+    page4 = Page("`;delete [name]`\nDeletes an existing tag")
+    page5 = Page("`;taglist`\nList of every tag")
+    root.link(page1, description="Make", reaction="1\N{combining enclosing keycap}")
+    root.link(page2, description="Show", reaction="2\N{combining enclosing keycap}")
+    root.link(page3, description="Edit", reaction="3\N{combining enclosing keycap}")
+    root.link(page4, description="Delete", reaction="4\N{combining enclosing keycap}")
+    root.link(page5, description="Taglist", reaction="5\N{combining enclosing keycap}")
+    
 
 def setup(client):
   client.add_cog(HelpCog(client))
