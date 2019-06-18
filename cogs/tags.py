@@ -26,7 +26,7 @@ class Tags(commands.Cog):
     writer.commit()
     await ctx.send(f"Created tag {name}")
   
-  @commands.command()
+  @commands.command(aliases=["tag"])
   async def show(self, ctx, *, name):
     if not os.path.exists("index"):
       os.mkdir("index")
