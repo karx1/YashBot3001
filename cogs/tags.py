@@ -8,11 +8,15 @@ from whoosh.query import *
 from whoosh.query import Every
 from whoosh.qparser import QueryParser
 
+
+
 class Tags(commands.Cog):
   def __init__(self, client):
     self.client = client
     self.schema = Schema(title=TEXT(stored=True), content=TEXT(stored=True), path=ID(unique=True), tags=KEYWORD, icon=STORED, editor=TEXT(stored=True))
   
+
+
   @commands.command()
   async def make(self, ctx, name, *, content: commands.clean_content):
     if not os.path.exists("index"):
@@ -26,7 +30,7 @@ class Tags(commands.Cog):
     writer.commit()
     await ctx.send(f"Created tag {name}")
   
-  @commands.command(aliases=["tag"])
+  @commands.command()
   async def show(self, ctx, *, name):
     if not os.path.exists("index"):
       os.mkdir("index")
@@ -37,8 +41,12 @@ class Tags(commands.Cog):
     with ix.searcher() as searcher:
       parser = QueryParser('title', schema=ix.schema)
       query = parser.parse(name)
-      results = searcher.search(query)
-      await ctx.send(results[0]['content'])
+      corrected = searcher.correct_query(query, name, maxdist=2)
+      if corrected.query != query:
+        await ctx.send(f"Tag not found. Did you mean: {corrected.string}?")
+      else:
+        results = searcher.search(query)
+        await ctx.send(results[0]['content'])
   
   @commands.command()
   async def edit(self, ctx, name, *, content: commands.clean_content):
@@ -64,7 +72,7 @@ class Tags(commands.Cog):
       ix = open_dir("index")
     x = []
     with ix.searcher() as searcher:
-      results = searcher.search(Every('title'))
+      results = searcher.search(Every(), limit=None)
       i = 0
       for result in results:
         i += 1
@@ -97,13 +105,17 @@ class Tags(commands.Cog):
     with ix.searcher() as searcher:
       parser = QueryParser('title', schema=ix.schema)
       query = parser.parse(name)
-      results = searcher.search(query)
-      title = results[0]['title']
-      editor = results[0]['editor']
-      embed = discord.Embed(title="Tag Info", description="", color=0x00ff00)
-      embed.add_field(name="Title", value=title)
-      embed.add_field(name="Last edited by", value=editor, inline=False)
-      await ctx.send(embed=embed)
+      corrected = searcher.correct_query(query, name, maxdist=2)
+      if corrected.query != query:
+        await ctx.send(f"Tag not found. Did you mean {corrected.string}?")
+      else:
+        results = searcher.search(query)
+        title = results[0]['title']
+        editor = results[0]['editor']
+        embed = discord.Embed(title="Tag Info", description="", color=0x00ff00)
+        embed.add_field(name="Title", value=title)
+        embed.add_field(name="Last edited by", value=editor, inline=False)
+        await ctx.send(embed=embed)
 
 def setup(client):
   client.add_cog(Tags(client))
