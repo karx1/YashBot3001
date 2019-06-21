@@ -2,60 +2,50 @@ import discord
 from discord.ext import commands
 import os.path
 import os
-from whoosh.index import create_in, open_dir
-from whoosh.fields import Schema, STORED, ID, KEYWORD, TEXT
-import dataset
+import sqlite3
 
 
 
 class Tags(commands.Cog):
   def __init__(self, client):
     self.client = client
-    self.schema = Schema(title=TEXT(stored=True), content=TEXT(stored=True), path=ID(unique=True), tags=KEYWORD, icon=STORED, editor=TEXT(stored=True))
-    self.db = dataset.connect('	postgres://rnoxyawx:C-JNS12hplxKvRoZz2IQSJbphtUy1SIF@hansken.db.elephantsql.com:5432/rnoxyawx')
-    self.table = self.db['tags']
+    self.con = sqlite3.connect('cogs/data/data.db')
+    self.cur = self.con.cursor()
+    self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
+
   
 
 
   @commands.command()
   async def make(self, ctx, name, *, content: commands.clean_content):
-    self.table.insert(dict(title=name, content=content, editor=str(ctx.author)))
-    self.db.commit()
+    self.cur.execute(f"INSERT INTO tags VALUES('{name}', '{content}')")
     await ctx.send(f"Created tag {name}")
   
   @commands.command()
   async def show(self, ctx, *, name):
-    result = self.table.find_one(title=name)
-    await ctx.send(result['content'])
+    self.cur.execute(f"SELECT content FROM tags WHERE title = '{name}'")
+    result = self.cur.fetchone()
+    await ctx.send(result[0])
   
   @commands.command()
   async def edit(self, ctx, name, *, content: commands.clean_content):
-    self.table.delete(title=name)
-    self.table.insert(dict(title=name, content=content, editor=str(ctx.author)))
-    self.db.commit()
+    self.cur.execute(f"DELETE FROM tags WHERE title = '{name}'")
+    self.cur.execute(f"INSERT INTO tags VALUES('{name}', '{content}')")
     await ctx.send(f"Edited tag {name}")
 
 
   @commands.command()
-  async def taglist(self, ctx):
-    x = []
-    i = 0
-    for tag in self.db['tags']:
-      i += 1
-      x.append(f"{i}. {tag['title']}")
-    embed = discord.Embed(title="Tag List", description="\n".join(x), colour=0x00ff00)
-    await ctx.send(embed=embed)
-
-  @commands.command()
   async def delete(self, ctx, *, name):
-    self.table.delete(title=name)
+    self.cur.execute(f"DELETE FROM tags WHERE title = '{name}'")
     await ctx.send(f"Deleted tag {name}")
+
 
 
   @commands.command()
   async def raw(self, ctx, *, name):
-    result = self.table.find_one(title=name)
-    cleaned = discord.utils.escape_markdown(result['content'])
+    self.cur.execute(f"SELECT content FROM tags WHERE title = '{name}'")
+    result = self.cur.fetchone()
+    cleaned = discord.utils.escape_markdown(result[0])
     await ctx.send(cleaned)
 
   @commands.command()
@@ -70,12 +60,17 @@ class Tags(commands.Cog):
       title = msg.content
       await ctx.send(f"Cool! The name is {title}. What about the content? Type your answer in the chat.")
       msg = await self.client.wait_for('message', check=check)
-      if msg.content == f'{ctx.prefix}abort':
+      if msg.content == f"{ctx.prefix}abort":
         await ctx.send("Stopping tag creation.")
       else:
         content = msg.content
-        self.table.insert(dict(title=title, content=content, editor=str(ctx.author)))
+        self.cur.execute(f"INSERT INTO tags VALUES('{title}', '{content}')")
         await ctx.send(f"Created tag {title}")
+
+  @commands.command()
+  async def taglist(self, ctx):
+    result = [job[0] for job in self.cur.execute("SELECT title FROM tags")]
+    embed = discord.Embed(title="Tag List", description="\n".join(result), color=)
     
 
 def setup(client):
