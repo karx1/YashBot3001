@@ -1,11 +1,90 @@
 import discord
 from discord.ext import commands
 from io import BytesIO
-from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageFilter, ImageOps, ImageMath
+from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageFilter, ImageOps
 import textwrap
 import matplotlib.pyplot as pp
+from concurrent.futures import ThreadPoolExecutor
+from .utils import async_executor
+import numpy as np
+import copy
+import typing
 
+def link(arr, arr2):
+    rgb1 = arr.reshape((arr.shape[0] * arr.shape[1], 3))
+    rgb2 = list(map(tuple, arr2.reshape((arr2.shape[0] * arr2.shape[1], 3))))
+    template1 = {x: [0, []] for x in rgb2}
+    for x, y in zip(rgb2, rgb1):
+        template1[x][1].append(y)
+    return template1
 
+def reset_template(template):
+    for v in template.values():
+        v[0] = 0
+
+def process_sorting(img, img2):
+    arr = np.array(img)
+    arr2 = np.array(img2)
+
+    shape = arr.shape
+    npixs = shape[0] * shape[1]
+    valid = []
+    for i in range(1, npixs + 1):
+        num = npixs / i
+        if num.is_integer():
+            valid.append((int(num), i))
+
+    frames = []
+    way_back = []
+    for v in valid:
+        arr = arr.reshape((v[0], v[1], shape[2]))
+        arr.view("uint8,uint8,uint8").sort(order=["f2"], axis=1)
+        arr2 = arr2.reshape((v[0], v[1], shape[2]))
+        arr2.view("uint8,uint8,uint8").sort(order=["f2"], axis=1)
+        new = Image.fromarray(arr.reshape(shape))
+        frames.append(new)
+        ar2 = copy.copy(arr2)
+        way_back.append(ar2)
+
+    template = link(arr, arr2)
+
+    for way in reversed(way_back):
+        for i, z in enumerate(way[:, :, ]):
+            for x, rgb in enumerate(z):
+                thing = template[tuple(rgb)]
+                way[:, :, ][i][x] = thing[1][thing[0]]
+                thing[0] += 1
+        new = Image.fromarray(way.reshape(shape))
+        frames.append(new)
+        reset_template(template)
+
+    for i in range(5):
+        frames.insert(0, frames[0])
+        frames.append(frames[-1])
+    frames += list(reversed(frames))
+    return frames
+
+@async_executor()
+def process_transform(img1, img2):
+    img1 = img1.resize((256, 256), Image.NEAREST)
+    if img1.mode != "RGB":
+        img1 = img1.convert("RGB")
+    img2 = img2.resize((256, 256), Image.NEAREST)
+    if img2.mode != "RGB":
+        img2 = img2.convert("RGB")
+    frames = process_sorting(img1, img2)
+
+    buff = BytesIO()
+    frames[0].save(
+            buff,
+            "gif",
+            save_all=True,
+            append_images=frames[1:] + frames[-1:] * 5,
+            duration=125,
+            loop=0
+        )
+    buff.seek(0)
+    return buff
 
 class ImageCog(commands.Cog):
   def __init__(self, client):
@@ -152,22 +231,45 @@ class ImageCog(commands.Cog):
 
   @commands.command()
   async def invert(self, ctx, *, member: discord.Member = None):
-    async with ctx.typing():
-      member = member or ctx.message.author
-      i = member.avatar_url_as(format='png')
-      j = await i.read()
-      io = BytesIO(j)
-      image = Image.open(io)
+    member = member or ctx.message.author
+    i = member.avatar_url_as(format='png')
+    j = await i.read()
+    io = BytesIO(j)
+    image = Image.open(io)
+    def isync(image=image):
       if image.mode == 'RGBA':
         r,g,b,a = image.split()
         rgb_image = Image.merge('RGB', (r,g,b))
         inverted_image = ImageOps.invert(rgb_image)
         inverted_image.save('cogs/data/out/out.png')
-        await ctx.send(file=discord.File('cogs/data/out/out.png'))
       else:
         im1 = ImageOps.invert(image)
         im1.save('cogs/data/out/out.png')
-        await ctx.send(file=discord.File('cogs/data/out/out.png'))
+    async with ctx.typing():
+      await self.client.loop.run_in_executor(ThreadPoolExecutor(), isync)
+      await ctx.send(file=discord.File('cogs/data/out/out.png'))
+
+  @commands.command()
+  async def transform(
+          self, ctx,
+          user: typing.Union[discord.Member, discord.User],
+            *, other: typing.Union[discord.Member, discord.User] = None):
+        """Transform the avatar of one user to that of another and back. Credit goes to Capn#0001"""
+
+        other = other or ctx.author
+
+        # Save bandwidth
+        im1 = Image.open(BytesIO(await user.avatar_url_as(format="png", size=256).read()))
+        im2 = Image.open(BytesIO(await other.avatar_url_as(format="png", size=256).read()))
+        async with ctx.typing():
+
+            if other.id == ctx.author.id:
+                buff = await process_transform(im1, im2)
+            else:
+                buff = await process_transform(im2, im1)
+
+
+            await ctx.send(file=discord.File(buff, "out.gif"))
 
 
 def setup(client):
