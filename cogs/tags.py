@@ -86,6 +86,10 @@ class Tags(commands.Cog):
       i += 1
       x.append(f"{i}. {result}")
     embed = discord.Embed(title="Tag List", description="\n".join(x), colour=0x00ff00)
+    embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
+    name = ctx.author.display_name
+    avatar = str(ctx.author.avatar_url)
+    embed.set_author(name=name, icon_url=avatar)
     await ctx.send(embed=embed)
     
   @commands.command()
