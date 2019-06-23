@@ -88,6 +88,12 @@ class Tags(commands.Cog):
     embed = discord.Embed(title="Tag List", description="\n".join(x))
     await ctx.send(embed=embed)
     
+  @commands.command()
+  @commands.is_owner()
+  async def closedb(self, ctx):
+    self.con.commit()
+    self.con.close()
+    await ctx.send("Done.")
 
 def setup(client):
   client.add_cog(Tags(client))
