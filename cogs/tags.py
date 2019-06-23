@@ -85,7 +85,7 @@ class Tags(commands.Cog):
     for result in results:
       i += 1
       x.append(f"{i}. {result}")
-    embed = discord.Embed(title="Tag List", description="\n".join(x))
+    embed = discord.Embed(title="Tag List", description="\n".join(x), colour=0x00ff00)
     await ctx.send(embed=embed)
     
   @commands.command()
