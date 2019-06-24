@@ -1,67 +1,113 @@
 import discord
 from discord.ext import commands
-import datetime
+import aiosqlite
 
-class counter:
-  start_time = datetime.datetime.now()
-c = counter()
 
-class InfoCog(commands.Cog):
+
+class Tags(commands.Cog):
   def __init__(self, client):
     self.client = client
 
-  @commands.command()
-  async def invite(self, ctx):
-    print("Advertising Start!")
-    name = ctx.message.author.display_name
-    avy = str(ctx.message.author.avatar_url)
-    embed=discord.Embed(title="Invite YashBot 3001", description="", color=0x00ff00)
-    embed.add_field(name="YashBot3001", value="[Invite YashBot3001](https://yashbot3001--nerdstep710.repl.co/invite)", inline=False)
-    embed.add_field(name="Uno Reverse Card", value="[Invite Uno Reverse Card](https://discordapp.com/api/oauth2/authorize?scope=bot&client_id=565565207326490624)", inline=False)
-    embed.add_field(name="Support Server", value="[Join the Support Server](https://discord.gg/hG6RDZz)")
-    embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
-    embed.set_author(name=name, icon_url=avy)
-    embed.set_footer(text=datetime.datetime.now())
-    await ctx.send(embed=embed)
+  async def get_tag(self, name):
+    async with aiosqlite.connect('data.db') as con:
+      await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
+      async with con.execute(f"SELECT content FROM tags WHERE title = '{name.lower()}'") as cur:
+        result = await cur.fetchone()
+        return result[0]
+
+  async def make_tag(self, name, content):
+    async with aiosqlite.connect('data.db') as con:
+      await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
+      await con.execute(f"INSERT INTO tags VALUES('{name.lower()}', '{content}')")
+      await con.commit()
+
+  async def delete_tag(self, name):
+    async with aiosqlite.connect('data.db') as con:
+      await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
+      await con.execute(f"DELETE FROM tags WHERE title = '{name.lower()}'")
+      await con.commit()
 
   @commands.command()
-  async def info(self, ctx):
-    name = ctx.message.author.display_name
-    avy = str(ctx.message.author.avatar_url)
-    users = len(self.client.users)
-    servers = len(self.client.guilds)
-    embed=discord.Embed(title="", description="", color=0x00ff00)
-    embed.add_field(name="YashBot3001 info", value="This bot was made by Yash Karandikar. It has 1015 lines of code, is written in Python 3.7, and uses discord.py 1.1.1.\nEnjoy!", inline=False)
-    embed.add_field(name="Prefix", value=";", inline=False)
-    embed.add_field(name="Changelog", value="[Check out the changelog here!](https://tinyurl.com/yashrobot)", inline=False)
-    embed.add_field(name="Users", value=f"This bot can see {users} users and {servers} servers.")
-    embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
-    embed.set_author(name=name, icon_url=avy)
-    embed.set_footer(text=datetime.datetime.now())
-    await ctx.send(embed=embed)
-
+  async def make(self, ctx, name, *, content: commands.clean_content):
+    await self.make_tag(name, content)
+    await ctx.send(f"Created tag {name}")
   
-
+  @commands.command(aliases=["tag", 'showtag'])
+  async def show(self, ctx, *, name):
+    result = await self.get_tag(name)
+    await ctx.send(result)
   
   @commands.command()
-  async def source(self, ctx):
-    await ctx.send("My code can be found here: https://github.com/nerdstep710/YashBot3001")
+  async def edit(self, ctx, name, *, content: commands.clean_content):
+    await self.delete_tag(name)
+    await self.make_tag(name, content)
+    await ctx.send(f"Edited tag {name.lower()}")
+
 
   @commands.command()
-  async def uptime(self, ctx):
-    command_time = datetime.datetime.now()
-    ut = command_time - c.start_time
-    await ctx.send(f"This bot has been alive for {ut}")
+  async def delete(self, ctx, *, name):
+    await self.delete_tag(name)
+    await ctx.send(f"Deleted tag {name}")
 
-  @commands.command(aliases=["servers"])
-  async def guilds(self, ctx):
-    server_count = len(self.client.guilds)
-    await ctx.send(f"I am in **{server_count}** guilds!")
 
-  @commands.command(aliases=["members"])
-  async def users(self, ctx):
-    user_count = len(self.client.users)
-    await ctx.send(f"I can see **{user_count}** users!")
+  @commands.command()
+  async def raw(self, ctx, *, name):
+    result = await self.get_tag(name)
+    cleaned = discord.utils.escape_markdown(result)
+    await ctx.send(cleaned)
+
+  @commands.command(ignore_extra=True)
+  async def create(self, ctx):
+      await ctx.send(f"Hey! So I heard you want to make a tag. What's it gonna be called? Type your answer in the chat, or type {ctx.prefix}abort at any to stop making a tag.")
+      def check(m):
+        return m.channel == ctx.message.channel and m.author == ctx.message.author
+      msg = await self.client.wait_for('message', check=check)
+      if msg.content == f"{ctx.prefix}abort":
+        await ctx.send("Stopping tag creation.") 
+      else:
+        title = msg.content
+        await ctx.send(f"Cool! The name is {title}. What about the content? Type your answer in the chat.")
+        msg = await self.client.wait_for('message', check=check)
+        if msg.content == f"{ctx.prefix}abort":
+          await ctx.send("Stopping tag creation.")
+        else:
+          content = msg.content
+          await self.make_tag(title, content)
+          await ctx.send(f"Created tag {title.lower()}")
+
+  @commands.command()
+  async def taglist(self, ctx):
+    async with aiosqlite.connect('data.db') as con:
+      await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
+      async with con.execute('SELECT title FROM tags') as cur:
+        x = []
+        i = 0
+        async for result in cur:
+          i += 1
+          x.append(f"{i}. {result[0]}")
+        embed = discord.Embed(title="Tag List", description="\n".join(x), colour=0x00ff00)
+        embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
+        name = ctx.author.display_name
+        avatar = str(ctx.author.avatar_url)
+        embed.set_author(name=name, icon_url=avatar)
+        await ctx.send(embed=embed)
+    
+  @commands.command()
+  async def tagsearch(self, ctx, *, query):
+    async with aiosqlite.connect('data.db') as con:
+      await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
+      async with con.execute(f"SELECT title FROM tags WHERE title LIKE '%{query.lower()}%'") as cur:
+        x = []
+        i = 0
+        async for result in cur:
+          i += 1
+          x.append(f"{i}. {result[0]}")
+        embed = discord.Embed(title=f"Results for {query}", description="\n".join(x), colour=0x00ff00)
+        embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
+        name = ctx.author.display_name
+        avatar = str(ctx.author.avatar_url)
+        embed.set_author(name=name, icon_url=avatar)
+        await ctx.send(embed=embed)
 
 def setup(client):
-  client.add_cog(InfoCog(client))
+  client.add_cog(Tags(client))
