@@ -11,20 +11,20 @@ class Tags(commands.Cog):
   async def get_tag(self, name):
     async with aiosqlite.connect('data.db') as con:
       await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-      async with con.execute(f"SELECT content FROM tags WHERE title = '{name.lower()}'") as cur:
+      async with con.execute(f"SELECT content FROM tags WHERE title=?", [name.lower()]) as cur:
         result = await cur.fetchone()
         return result[0]
 
   async def make_tag(self, name, content):
     async with aiosqlite.connect('data.db') as con:
       await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-      await con.execute(f"INSERT INTO tags VALUES('{name.lower()}', '{content}')")
+      await con.execute(f"INSERT INTO tags VALUES(?, ?)", (name.lower(), content))
       await con.commit()
 
   async def delete_tag(self, name):
     async with aiosqlite.connect('data.db') as con:
       await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-      await con.execute(f"DELETE FROM tags WHERE title = '{name.lower()}'")
+      await con.execute(f"DELETE FROM tags WHERE title=?", [name.lower()])
       await con.commit()
 
   @commands.command()
