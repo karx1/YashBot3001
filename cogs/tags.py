@@ -1,103 +1,67 @@
 import discord
 from discord.ext import commands
-import sqlite3
+import datetime
 
+class counter:
+  start_time = datetime.datetime.now()
+c = counter()
 
-
-class Tags(commands.Cog):
+class InfoCog(commands.Cog):
   def __init__(self, client):
     self.client = client
-    self.con = sqlite3.connect('data.db')
-    self.cur = self.con.cursor()
-    self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-    self.con.commit()
-
-  
-
 
   @commands.command()
-  async def make(self, ctx, name, *, content: commands.clean_content):
-    self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-    self.cur.execute(f"INSERT INTO tags VALUES('{name}', '{content}')")
-    self.con.commit()
-    await ctx.send(f"Created tag {name}")
-  
-  @commands.command()
-  async def show(self, ctx, *, name):
-    self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-    self.cur.execute(f"SELECT content FROM tags WHERE title = '{name}'")
-    result = self.cur.fetchone()
-    await ctx.send(result[0])
-  
-  @commands.command()
-  async def edit(self, ctx, name, *, content: commands.clean_content):
-    self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-    self.cur.execute(f"DELETE FROM tags WHERE title = '{name}'")
-    self.cur.execute(f"INSERT INTO tags VALUES('{name}', '{content}')")
-    self.con.commit()
-    await ctx.send(f"Edited tag {name}")
-
-
-  @commands.command()
-  async def delete(self, ctx, *, name):
-    self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-    self.cur.execute(f"DELETE FROM tags WHERE title = '{name}'")
-    self.con.commit()
-    await ctx.send(f"Deleted tag {name}")
-
-
-
-  @commands.command()
-  async def raw(self, ctx, *, name):
-    self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-    self.cur.execute(f"SELECT content FROM tags WHERE title = '{name}'")
-    result = self.cur.fetchone()
-    cleaned = discord.utils.escape_markdown(result[0])
-    await ctx.send(cleaned)
-
-  @commands.command()
-  async def create(self, ctx):
-    self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-    await ctx.send(f"Hey! So I heard you want to make a tag. What's it gonna be called? Type your answer in the chat, or type {ctx.prefix}abort at any to stop making a tag.")
-    def check(m):
-      return m.channel == ctx.message.channel and m.author == ctx.message.author
-    msg = await self.client.wait_for('message', check=check)
-    if msg.content == f"{ctx.prefix}abort":
-      await ctx.send("Stopping tag creation.") 
-    else:
-      title = msg.content
-      await ctx.send(f"Cool! The name is {title}. What about the content? Type your answer in the chat.")
-      msg = await self.client.wait_for('message', check=check)
-      if msg.content == f"{ctx.prefix}abort":
-        await ctx.send("Stopping tag creation.")
-      else:
-        content = msg.content
-        self.cur.execute(f"INSERT INTO tags VALUES('{title}', '{content}')")
-        self.con.commit()
-        await ctx.send(f"Created tag {title}")
-
-  @commands.command()
-  async def taglist(self, ctx):
-    self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-    results = [job[0] for job in self.cur.execute("SELECT title FROM tags")]
-    x = []
-    i = 0
-    for result in results:
-      i += 1
-      x.append(f"{i}. {result}")
-    embed = discord.Embed(title="Tag List", description="\n".join(x), colour=0x00ff00)
+  async def invite(self, ctx):
+    print("Advertising Start!")
+    name = ctx.message.author.display_name
+    avy = str(ctx.message.author.avatar_url)
+    embed=discord.Embed(title="Invite YashBot 3001", description="", color=0x00ff00)
+    embed.add_field(name="YashBot3001", value="[Invite YashBot3001](https://yashbot3001--nerdstep710.repl.co/invite)", inline=False)
+    embed.add_field(name="Uno Reverse Card", value="[Invite Uno Reverse Card](https://discordapp.com/api/oauth2/authorize?scope=bot&client_id=565565207326490624)", inline=False)
+    embed.add_field(name="Support Server", value="[Join the Support Server](https://discord.gg/hG6RDZz)")
     embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
-    name = ctx.author.display_name
-    avatar = str(ctx.author.avatar_url)
-    embed.set_author(name=name, icon_url=avatar)
+    embed.set_author(name=name, icon_url=avy)
+    embed.set_footer(text=datetime.datetime.now())
     await ctx.send(embed=embed)
-    
+
   @commands.command()
-  @commands.is_owner()
-  async def closedb(self, ctx):
-    self.con.commit()
-    self.con.close()
-    await ctx.send("Done.")
+  async def info(self, ctx):
+    name = ctx.message.author.display_name
+    avy = str(ctx.message.author.avatar_url)
+    users = len(self.client.users)
+    servers = len(self.client.guilds)
+    embed=discord.Embed(title="", description="", color=0x00ff00)
+    embed.add_field(name="YashBot3001 info", value="This bot was made by Yash Karandikar. It has 1015 lines of code, is written in Python 3.7, and uses discord.py 1.1.1.\nEnjoy!", inline=False)
+    embed.add_field(name="Prefix", value=";", inline=False)
+    embed.add_field(name="Changelog", value="[Check out the changelog here!](https://tinyurl.com/yashrobot)", inline=False)
+    embed.add_field(name="Users", value=f"This bot can see {users} users and {servers} servers.")
+    embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
+    embed.set_author(name=name, icon_url=avy)
+    embed.set_footer(text=datetime.datetime.now())
+    await ctx.send(embed=embed)
+
+  
+
+  
+  @commands.command()
+  async def source(self, ctx):
+    await ctx.send("My code can be found here: https://github.com/nerdstep710/YashBot3001")
+
+  @commands.command()
+  async def uptime(self, ctx):
+    command_time = datetime.datetime.now()
+    ut = command_time - c.start_time
+    await ctx.send(f"This bot has been alive for {ut}")
+
+  @commands.command(aliases=["servers"])
+  async def guilds(self, ctx):
+    server_count = len(self.client.guilds)
+    await ctx.send(f"I am in **{server_count}** guilds!")
+
+  @commands.command(aliases=["members"])
+  async def users(self, ctx):
+    user_count = len(self.client.users)
+    await ctx.send(f"I can see **{user_count}** users!")
 
 def setup(client):
-  client.add_cog(Tags(client))
+  client.add_cog(InfoCog(client))
