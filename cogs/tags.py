@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import aiosqlite
+from .utils import db
 
 
 
@@ -8,51 +9,33 @@ class Tags(commands.Cog):
   def __init__(self, client):
     self.client = client
 
-  async def get_tag(self, name):
-    async with aiosqlite.connect('data.db') as con:
-      await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-      async with con.execute(f"SELECT content FROM tags WHERE title=?", [name.lower()]) as cur:
-        result = await cur.fetchone()
-        return result[0]
-
-  async def make_tag(self, name, content):
-    async with aiosqlite.connect('data.db') as con:
-      await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-      await con.execute(f"INSERT INTO tags VALUES(?, ?)", (name.lower(), content))
-      await con.commit()
-
-  async def delete_tag(self, name):
-    async with aiosqlite.connect('data.db') as con:
-      await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-      await con.execute(f"DELETE FROM tags WHERE title=?", [name.lower()])
-      await con.commit()
 
   @commands.command()
   async def make(self, ctx, name, *, content: commands.clean_content):
-    await self.make_tag(name, content)
+    await db.make_tag(name, content)
     await ctx.send(f"Created tag {name}")
   
   @commands.command(aliases=["tag", 'showtag'])
   async def show(self, ctx, *, name):
-    result = await self.get_tag(name)
+    result = await db.get_tag(name)
     await ctx.send(result)
   
   @commands.command()
   async def edit(self, ctx, name, *, content: commands.clean_content):
-    await self.delete_tag(name)
-    await self.make_tag(name, content)
+    await db.delete_tag(name)
+    await db.make_tag(name, content)
     await ctx.send(f"Edited tag {name.lower()}")
 
 
   @commands.command()
   async def delete(self, ctx, *, name):
-    await self.delete_tag(name)
+    await db.delete_tag(name)
     await ctx.send(f"Deleted tag {name}")
-
+    
 
   @commands.command()
   async def raw(self, ctx, *, name):
-    result = await self.get_tag(name)
+    result = await db.get_tag(name)
     cleaned = discord.utils.escape_markdown(result)
     await ctx.send(cleaned)
 
@@ -72,7 +55,7 @@ class Tags(commands.Cog):
           await ctx.send("Stopping tag creation.")
         else:
           content = msg.content
-          await self.make_tag(title, content)
+          await db.make_tag(title, content)
           await ctx.send(f"Created tag {title.lower()}")
 
   @commands.command()
@@ -96,7 +79,8 @@ class Tags(commands.Cog):
   async def tagsearch(self, ctx, *, query):
     async with aiosqlite.connect('data.db') as con:
       await con.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
-      async with con.execute(f"SELECT title FROM tags WHERE title LIKE '%{query.lower()}%'") as cur:
+      new_query = f"%{query.lower()}%"
+      async with con.execute(f"SELECT title FROM tags WHERE title LIKE ?", [new_query]) as cur:
         x = []
         i = 0
         async for result in cur:
