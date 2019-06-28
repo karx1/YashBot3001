@@ -8,34 +8,35 @@ from .utils import db
 class Tags(commands.Cog):
   def __init__(self, client):
     self.client = client
+    self.db = db.db()
 
 
   @commands.command()
   async def make(self, ctx, name, *, content: commands.clean_content):
-    await db.make_tag(name, content)
+    await self.db.make_tag(name, content)
     await ctx.send(f"Created tag {name}")
   
   @commands.command(aliases=["tag", 'showtag'])
   async def show(self, ctx, *, name):
-    result = await db.get_tag(name)
+    result = await self.db.get_tag(name)
     await ctx.send(result)
   
   @commands.command()
   async def edit(self, ctx, name, *, content: commands.clean_content):
-    await db.delete_tag(name)
-    await db.make_tag(name, content)
+    await self.db.delete_tag(name)
+    await self.db.make_tag(name, content)
     await ctx.send(f"Edited tag {name.lower()}")
 
 
   @commands.command()
   async def delete(self, ctx, *, name):
-    await db.delete_tag(name)
+    await self.db.delete_tag(name)
     await ctx.send(f"Deleted tag {name}")
     
 
   @commands.command()
   async def raw(self, ctx, *, name):
-    result = await db.get_tag(name)
+    result = await self.db.get_tag(name)
     cleaned = discord.utils.escape_markdown(result)
     await ctx.send(cleaned)
 
@@ -55,7 +56,7 @@ class Tags(commands.Cog):
           await ctx.send("Stopping tag creation.")
         else:
           content = msg.content
-          await db.make_tag(title, content)
+          await self.db.make_tag(title, content)
           await ctx.send(f"Created tag {title.lower()}")
 
   @commands.command()
