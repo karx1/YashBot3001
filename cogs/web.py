@@ -8,6 +8,8 @@ import wikipedia
 import aiohttp
 import textwrap
 
+
+
 class WebCog(commands.Cog):
   def __init__(self, client):
     self.client = client
@@ -20,8 +22,6 @@ class WebCog(commands.Cog):
       name_plain = ctx.message.author.display_name
       if query is "":
         return f"You must provide a search term, {name_plain}!"
-      elif query.lower() is "thanos":
-        query = "who is thanos"
       for j in search(query, tld="com", num=1, stop=1):
         print(f"{name} has searched for '{query}' and it returned {j}")
         return j
@@ -68,6 +68,7 @@ class WebCog(commands.Cog):
         await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
     else:
       await ctx.send(content)
+
 
 
 def setup(client):
