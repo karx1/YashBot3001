@@ -191,7 +191,7 @@ class ImageCog(commands.Cog):
     await ctx.send(embed=embed)
 
   @commands.command()
-  async def deepfry(self, ctx, *, member: discord.Member = None):
+  async def deepfry(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
     member = member or ctx.message.author
     m = member.avatar_url_as(format='png')
     m = await m.read()
@@ -209,7 +209,7 @@ class ImageCog(commands.Cog):
     await ctx.send(file = discord.File('cogs/data/out/out.png'))
 
   @commands.command()
-  async def sad(self, ctx, *, member: discord.Member = None):
+  async def sad(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
     member = member or ctx.message.author
     i = member.avatar_url_as(format='png')
     j = await i.read()
@@ -219,7 +219,7 @@ class ImageCog(commands.Cog):
     await ctx.send(file=discord.File('cogs/data/out/out.png'))
 
   @commands.command()
-  async def emboss(self, ctx, *, member: discord.Member = None):
+  async def emboss(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
     member = member or ctx.message.author
     i = member.avatar_url_as(format='png')
     j = await i.read()
@@ -230,7 +230,7 @@ class ImageCog(commands.Cog):
     await ctx.send(file=discord.File('cogs/data/out/out.png'))
 
   @commands.command()
-  async def invert(self, ctx, *, member: discord.Member = None):
+  async def invert(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
     member = member or ctx.message.author
     i = member.avatar_url_as(format='png')
     j = await i.read()
@@ -270,6 +270,7 @@ class ImageCog(commands.Cog):
 
 
             await ctx.send(file=discord.File(buff, "out.gif"))
+
 
 
 def setup(client):
