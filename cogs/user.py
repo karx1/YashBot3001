@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import typing
 
 class UserCog(commands.Cog):
   def __init__(self, client):
@@ -10,7 +11,7 @@ class UserCog(commands.Cog):
     await ctx.send("What? Did you expect something to happen?")
   
   @user.command()
-  async def info(self, ctx, member: discord.Member = None):
+  async def info(self, ctx, member: typing.Union[discord.Member, discord.User] = None):
     if member is None:
       member = ctx.message.author
     embed = discord.Embed(title="User info!", description=str(member), color=0x00ff00)
@@ -21,7 +22,7 @@ class UserCog(commands.Cog):
   
 
   @user.command()
-  async def avatar(self, ctx, member: discord.Member = None):
+  async def avatar(self, ctx, member: typing.Union[discord.Member, discord.User] = None):
     if member is None:
       member = ctx.message.author
     embed = discord.Embed(title=f"{member.name}'s avatar", description="", color=0x00ff00)
