@@ -26,12 +26,16 @@ class EventCog(commands.Cog):
     f.close()
     fi = open('log.txt', 'r')
     print(fi.read())
-    if "is not found" in error:
+    if isinstance(error, commands.CommandNotFound):
       return
-    elif "check functions for" in error:
+    elif isinstance(error, commands.CheckFailure):
       await ctx.send("It looks like you can't use this command. If you believe this is a mistake, ask for help in the support server!")
-    elif "Results only has 0 hits" in error:
-      await ctx.send("It looks like this tag does not exist. Use `;make` to create it!")
+    elif "'NoneType' object is not subscriptable" in error:
+      await ctx.send("Tag not found.")
+    elif "division by zero" in error:
+      await ctx.send("I can't divide by zero!")
+    elif isinstance(error, commands.MissingRequiredArgument):
+      await ctx.send(f"Looks like you forgot to provide {error.param}!")
     else:
       await ctx.send("Error: {}".format(error))
 
