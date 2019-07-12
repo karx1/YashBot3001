@@ -16,12 +16,10 @@ class WebCog(commands.Cog):
 
 
   @commands.command()
-  async def google(self, ctx, *, q=""):
+  async def google(self, ctx, *, q):
     def gsync(query=q):
       name = str(ctx.message.author)
       name_plain = ctx.message.author.display_name
-      if query is "":
-        return f"You must provide a search term, {name_plain}!"
       for j in search(query, tld="com", num=1, stop=1):
         print(f"{name} has searched for '{query}' and it returned {j}")
         return j
@@ -32,11 +30,9 @@ class WebCog(commands.Cog):
       
 
   @commands.command()
-  async def youtube(self, ctx, *, q=""):
+  async def youtube(self, ctx, *, q):
     def ytsync(query=q):
       r = 0
-      if query == "":
-        return f"You must provide a search term, {ctx.author.mention}!"
       search = urllib.parse.quote(query)
       url = f"https://www.youtube.com/results?search_query={search}"
       response = urllib.request.urlopen(url)
@@ -54,9 +50,7 @@ class WebCog(commands.Cog):
     
 
   @commands.command(aliases=["wikipedia", "define"])
-  async def wiki(self, ctx, *, query=""):
-    if query is "":
-      await ctx.send("You must provide a search term, {ctx.message.author.mention}!")
+  async def wiki(self, ctx, *, query):
     c = wikipedia.summary(query)
     content = f"{c}"
     if len(content) > 2000:
