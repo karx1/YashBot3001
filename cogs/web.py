@@ -69,7 +69,10 @@ class WebCog(commands.Cog):
     else:
       await ctx.send(content)
 
-
+  @commands.command()
+  async def reddit(self, ctx, query):
+    query = query.replace(" ", "%20")
+    await ctx.send(f"https://www.reddit.com/r/{query}")
 
 def setup(client):
   client.add_cog(WebCog(client))
