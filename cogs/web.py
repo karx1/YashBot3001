@@ -16,8 +16,8 @@ class WebCog(commands.Cog):
 
 
   @commands.command()
-  async def google(self, ctx, *, q):
-    def gsync(query=q):
+  async def google(self, ctx, *, query):
+    def gsync(query=query):
       name = str(ctx.message.author)
       name_plain = ctx.message.author.display_name
       for j in search(query, tld="com", num=1, stop=1):
@@ -30,8 +30,8 @@ class WebCog(commands.Cog):
       
 
   @commands.command()
-  async def youtube(self, ctx, *, q):
-    def ytsync(query=q):
+  async def youtube(self, ctx, *, query):
+    def ytsync(query=query):
       r = 0
       search = urllib.parse.quote(query)
       url = f"https://www.youtube.com/results?search_query={search}"
