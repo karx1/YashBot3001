@@ -18,11 +18,8 @@ class FunCog(commands.Cog):
     await ctx.send("Hi!")
 
   @commands.command(aliases=["8ball"])
-  async def ball(self, ctx, *, question=""):
-    if question is "":
-      await ctx.send("You must ask a question!")
-      return
-    elif '?' not in question:
+  async def ball(self, ctx, question):
+    if '?' not in question:
       await ctx.send("You must ask a question!")
       return
     possible_responses = [
@@ -131,8 +128,9 @@ class FunCog(commands.Cog):
     w = self.client.latency
     w = w * 1000
     w = round(w, 4)
-    m = await ctx.send("Pong!")
-    await m.edit(content=f"Pong! Latency is {w} ms.\nhttps://media.giphy.com/media/pWncxUrrNHdny/giphy.gif")
+    embed=discord.Embed(title="Pong!", description=f"Latency is {w} ms.", color=0x00ff00)
+    embed.set_image(url="https://media.giphy.com/media/pWncxUrrNHdny/giphy.gif")
+    await ctx.send(embed=embed)
 
 
   @commands.command()
@@ -160,7 +158,7 @@ class FunCog(commands.Cog):
     await ctx.send(random.choice(possible_responses))
 
   @commands.command()
-  async def rps(self, ctx, choice=""):
+  async def rps(self, ctx, choice):
     choice = choice.lower()
     possible_choices = [
       'rock',
@@ -261,6 +259,42 @@ class FunCog(commands.Cog):
     await message.edit(content=f"```css\nHacking...\nMember found!\nGetting ip...\nip found\nip={a}\nVirus pushed to ip address\nGetting info...\nemail={b}{f}@gmail.com\npassword=******\nDeleting files...\nFiles deleted.\nClosing Connection...\nConnection Closed.\nExited port {j}```")
     await asyncio.sleep(2)
     await ctx.send(f"Finished hacking user **{target.display_name}**.")
+
+  
+  @commands.command()
+  async def maze(self, ctx):
+    m = await ctx.send("Welcome to MAZE GAME!\ntype `start` to continue.")
+    def check(m):
+      return m.content.lower() == "start"
+    msg = await self.client.wait_for('message', check=check)
+    await m.delete()
+    m = await ctx.send(f"Welcome {msg.author.mention}!\nYou are in a dark cavern. you can go forward or right.")
+    def check(m):
+      return m.content.lower() == 'forward'
+    msg = await self.client.wait_for('message', check=check)
+    if msg.content.lower() == 'forward':
+      await m.delete()
+      m = await ctx.send("you went forward and came out of the cave. There you see a sword. Will you pick it up? Type `yes` or `no`.")
+      def check(m):
+        return m.content.lower() == 'yes'
+      msg = await self.client.wait_for('message', check=check)
+      if msg.content.lower() == 'yes':
+        await m.delete()
+        await ctx.send('You picked up the sword!')
+        m = await ctx.send('After wandering around for a while, you encountered a dragon! will you `fight` or `flee`?')
+        def check(m):
+          return m.content.lower() == 'fight'
+        msg = await self.client.wait_for('message', check=check)
+        if msg.content.lower() == 'fight':
+          await m.delete()
+          await ctx.send("You fought with your best efforts and vanquished the dragon!")
+        else:
+          await m.delete()
+          await ctx.send('You decide to run away, but the dragon is much faster. It eats you up in one massive gulp and files away.')
+      else:
+        await m.delete()
+        await ctx.send("You decided not to pick up the sword. This may have been a mistake.")
+
 
 def setup(client):
   client.add_cog(FunCog(client))
