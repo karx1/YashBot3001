@@ -5,7 +5,7 @@ from gtts import gTTS
 import datetime
 
 
-class TextCog(commands.Cog):
+class Text(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -64,4 +64,4 @@ class TextCog(commands.Cog):
 
 
 def setup(client):
-  client.add_cog(TextCog(client))
+  client.add_cog(Text(client))
