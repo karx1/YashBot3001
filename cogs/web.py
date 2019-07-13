@@ -10,7 +10,7 @@ import textwrap
 
 
 
-class WebCog(commands.Cog):
+class Web(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -65,8 +65,8 @@ class WebCog(commands.Cog):
 
   @commands.command()
   async def reddit(self, ctx, query):
-    query = query.replace(" ", "%20")
-    await ctx.send(f"https://www.reddit.com/r/{query}")
+    query = query.lower().replace(" ", "%20")
+    await ctx.send(f"https://www.reddit.com/r/{query}/")
 
 def setup(client):
   client.add_cog(WebCog(client))
