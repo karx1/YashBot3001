@@ -6,7 +6,7 @@ class counter:
   start_time = datetime.datetime.now()
 c = counter()
 
-class InfoCog(commands.Cog):
+class Info(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -64,4 +64,4 @@ class InfoCog(commands.Cog):
     await ctx.send(f"I can see **{user_count}** users!")
 
 def setup(client):
-  client.add_cog(InfoCog(client))
+  client.add_cog(Info(client))
