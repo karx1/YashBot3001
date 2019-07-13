@@ -4,7 +4,7 @@ import math
 
 
 
-class MathCog(commands.Cog):
+class Math(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -68,4 +68,4 @@ class MathCog(commands.Cog):
 	  await ctx.send(f"{number1} - {number2} is {subtracted_value}")
 
 def setup(client):
-  client.add_cog(MathCog(client))
+  client.add_cog(Math(client))
