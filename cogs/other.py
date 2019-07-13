@@ -3,7 +3,7 @@ from discord.ext import commands
 import time
 import datetime
 
-class OtherCog(commands.Cog):
+class Other(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -49,4 +49,4 @@ class OtherCog(commands.Cog):
 
 
 def setup(client):
-  client.add_cog(OtherCog(client))
+  client.add_cog(Other(client))
