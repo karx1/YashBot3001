@@ -69,4 +69,4 @@ class Web(commands.Cog):
     await ctx.send(f"https://www.reddit.com/r/{query}/")
 
 def setup(client):
-  client.add_cog(WebCog(client))
+  client.add_cog(Web(client))
