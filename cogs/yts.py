@@ -1,14 +1,12 @@
 import discord
 from discord.ext import commands
 
-#these commands only work in the YashBot3001 Testing server. You can modify the code to work in the server of your choice
-
 def yts():
   def predicate(ctx):
     return ctx.message.guild.id == 574596466773983244
   return commands.check(predicate)
 
-class YtsCog(commands.Cog):
+class YTS(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -48,4 +46,4 @@ class YtsCog(commands.Cog):
 
 
 def setup(client):
-  client.add_cog(YtsCog(client))
+  client.add_cog(YTS(client))
