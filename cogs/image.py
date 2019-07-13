@@ -86,7 +86,7 @@ def process_transform(img1, img2):
     buff.seek(0)
     return buff
 
-class ImageCog(commands.Cog):
+class Image(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -274,4 +274,4 @@ class ImageCog(commands.Cog):
 
 
 def setup(client):
-  client.add_cog(ImageCog(client))
+  client.add_cog(Image(client))
