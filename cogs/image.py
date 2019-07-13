@@ -86,7 +86,7 @@ def process_transform(img1, img2):
     buff.seek(0)
     return buff
 
-class Image(commands.Cog):
+class Images(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -97,8 +97,9 @@ class Image(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (100,100),text = "\n".join(textwrap.wrap(sent, width=25)),fill = (0,0,0), font = font)
-    image.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    image.save(bio, format="png")
+    bio.seek(0)
+    await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command()
   async def lisa(self, ctx, *, sent: commands.clean_content):
@@ -107,8 +108,9 @@ class Image(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (200,100),text = "\n".join(textwrap.wrap(sent, width=19)),fill = (0,0,0), font = font)
-    image.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    image.save(bio, format="png")
+    bio.seek(0)
+    await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command(aliases=["pewdiepie", 'felix'])
   async def pewds(self, ctx, *, sent: commands.clean_content):
@@ -117,8 +119,9 @@ class Image(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 18)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (210, 50),text = "\n".join(textwrap.wrap(sent, width=6)),fill = (0,0,0), font = font)
-    image.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    image.save(bio, format="png")
+    bio.seek(0)
+    await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command()
   async def gru(self, ctx, *, sent: commands.clean_content):
@@ -127,8 +130,8 @@ class Image(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 18)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (180, 50),text ="\n".join(textwrap.wrap(sent, width=10)),fill = (0,0,0), font = font)
-    image.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    image.save(bio, format="png")
+    await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command()
   async def linus(self, ctx, *, sent: commands.clean_content):
@@ -137,8 +140,9 @@ class Image(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 72)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (575, 100),text="\n".join(textwrap.wrap(sent, width=15)),fill = (0,0,0), font = font)
-    image.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    image.save(bio, format='png')
+    bio.seek(0)
+    await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command()
   async def trump(self, ctx, *, sent: commands.clean_content):
@@ -147,8 +151,8 @@ class Image(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (375, 300),text="\n".join(textwrap.wrap(sent, width=16)),fill = (0,0,0), font = font)
-    image.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    image.save(bio, format="png")
+    await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command()
   async def elon(self, ctx, *, sent: commands.clean_content):
@@ -157,8 +161,8 @@ class Image(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (225, 100),text="\n".join(textwrap.wrap(sent, width=11)),fill = (0,0,0), font = font)
-    image.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    image.save(bio, format="png")
+    await ctx.send(file = discord.File(bio, 'out.png'))
 
 
   @commands.command(aliases=['sponge', 'bob'])
@@ -168,8 +172,9 @@ class Image(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 92)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (710, 95),text="\n".join(textwrap.wrap(sent, width=10)),fill = (0,0,0), font = font)
-    image.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    image.save(bio, format="png")
+    bio.seek(0)
+    await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command(aliases=['board'])
   async def billboard(self, ctx, *, sent: commands.clean_content):
@@ -178,8 +183,9 @@ class Image(commands.Cog):
     font = ImageFont.truetype("cogs/data/ARIAL.TTF", 26)
     draw = ImageDraw.Draw(image)
     photo = draw.text(xy = (30, 75),text="\n".join(textwrap.wrap(sent, width=32)),fill = (0,0,0), font = font)
-    image.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    image.save(bio, format="png")
+    bio.seek(0)
+    await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command()
   async def supreme(self, ctx, *, text=""):
@@ -205,18 +211,22 @@ class Image(commands.Cog):
     im2 = color.enhance(1000)
     brightness = ImageEnhance.Brightness(im2)
     im2 = brightness.enhance(1000)
-    im2.save('cogs/data/out/out.png')
-    await ctx.send(file = discord.File('cogs/data/out/out.png'))
+    io = BytesIO()
+    im2.save(io, format="png")
+    io.seek(0)
+    await ctx.send(file = discord.File(io, "out.png"))
 
-  @commands.command()
-  async def sad(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
+  @commands.command(aliases=["gs", "greyscale"])
+  async def grayscale(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
     member = member or ctx.message.author
     i = member.avatar_url_as(format='png')
     j = await i.read()
     io = BytesIO(j)
+    io2 = BytesIO()
     img = Image.open(io).convert('L')
-    img.save('cogs/data/out/out.png')
-    await ctx.send(file=discord.File('cogs/data/out/out.png'))
+    img.save(io2, format="png")
+    io2.seek(0)
+    await ctx.send(file=discord.File(io2, "out.png"))
 
   @commands.command()
   async def emboss(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
@@ -224,10 +234,12 @@ class Image(commands.Cog):
     i = member.avatar_url_as(format='png')
     j = await i.read()
     io = BytesIO(j)
+    io2 = BytesIO()
     img = Image.open(io)
     im1 = img.filter(ImageFilter.EMBOSS)
-    im1.save('cogs/data/out/out.png')
-    await ctx.send(file=discord.File('cogs/data/out/out.png'))
+    im1.save(io2, format="png")
+    io2.seek(0)
+    await ctx.send(file=discord.File(io2, "out.png"))
 
   @commands.command()
   async def invert(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
@@ -235,19 +247,19 @@ class Image(commands.Cog):
     i = member.avatar_url_as(format='png')
     j = await i.read()
     io = BytesIO(j)
+    bio = BytesIO()
     image = Image.open(io)
-    def isync(image=image):
+    async with ctx.typing():
       if image.mode == 'RGBA':
         r,g,b,a = image.split()
         rgb_image = Image.merge('RGB', (r,g,b))
         inverted_image = ImageOps.invert(rgb_image)
-        inverted_image.save('cogs/data/out/out.png')
+        inverted_image.save(bio, format="png")
       else:
         im1 = ImageOps.invert(image)
-        im1.save('cogs/data/out/out.png')
-    async with ctx.typing():
-      await self.client.loop.run_in_executor(ThreadPoolExecutor(), isync)
-      await ctx.send(file=discord.File('cogs/data/out/out.png'))
+        im1.save(bio, format="png")
+      bio.seek(0)
+      await ctx.send(file=discord.File(bio, 'out.png'))
 
   @commands.command()
   async def transform(
@@ -274,4 +286,4 @@ class Image(commands.Cog):
 
 
 def setup(client):
-  client.add_cog(Image(client))
+  client.add_cog(Images(client))
