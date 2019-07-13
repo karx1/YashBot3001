@@ -86,7 +86,7 @@ def process_transform(img1, img2):
     buff.seek(0)
     return buff
 
-class Images(commands.Cog):
+class Image_(commands.Cog, name="Image"):
   def __init__(self, client):
     self.client = client
 
