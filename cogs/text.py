@@ -1,33 +1,70 @@
 import discord
 from discord.ext import commands
-import typing
+from pyfiglet import figlet_format
+from gtts import gTTS
+import datetime
+from io import BytesIO
 
-class User(commands.Cog):
+
+class Text(commands.Cog):
   def __init__(self, client):
     self.client = client
 
-  @commands.group(invoke_without_command=True)
-  async def user(self, ctx):
-    await ctx.send("What? Did you expect something to happen?")
-  
-  @user.command()
-  async def info(self, ctx, member: typing.Union[discord.Member, discord.User] = None):
-    if member is None:
-      member = ctx.message.author
-    embed = discord.Embed(title="User info!", description=str(member), color=0x00ff00)
-    embed.add_field(name="Activity:", value=member.activity)
-    embed.add_field(name="Status:", value=f"Overall: {member.status}\nMobile: {member.mobile_status}\nDesktop: {member.desktop_status}\nWeb: {member.web_status}")
-    embed.add_field(name="Timestamps:", value=f"Created at: {member.created_at}\nJoined at: {member.joined_at}\nPremium since: {member.premium_since}")
+  @commands.command()
+  async def secret(self, ctx, *, message= ""):
+	  if message is "":
+		  message = ctx.message.author.display_name
+	  await ctx.send(f"||{message}||")
+
+  @commands.command()
+  async def embed(self, ctx, *, message=""):
+    avy = ctx.message.author.avatar_url
+    avy_str = str(avy)
+    username = ctx.message.author.display_name
+    if message is "":
+      message = username
+    embed=discord.Embed(title="", description=message, color=0x00ff00)
+    embed.set_author(name=username, icon_url=avy_str)
+    embed.set_footer(text=datetime.datetime.now())
     await ctx.send(embed=embed)
+
+  @commands.command()
+  async def echo(self, ctx, *, message=""):
+    if message is "":
+      message = ctx.message.author.display_name
+    await ctx.send(message)
+
+  @commands.command()
+  async def tts(self, ctx, *, message: commands.clean_content):
+    await ctx.trigger_typing()
+    f = BytesIO()
+    tts = gTTS(text=message.lower(), lang="en")
+    tts.write_to_fp(f)
+    f.seek(0)
+    await ctx.send(file=discord.File(f, 'out.wav'))
+
+  @commands.command()
+  async def ascii(self, ctx, *, inp: commands.clean_content):
+    ascii_banner = figlet_format(inp, font="small")
+    await ctx.send(f"```{ascii_banner}```")
   
 
-  @user.command()
-  async def avatar(self, ctx, member: typing.Union[discord.Member, discord.User] = None):
-    if member is None:
-      member = ctx.message.author
-    embed = discord.Embed(title=f"{member.name}'s avatar", description="", color=0x00ff00)
-    embed.set_image(url=str(member.avatar_url))
-    await ctx.send(embed=embed)
+  @commands.command()
+  async def upper(self, ctx, *, message: commands.clean_content):
+    message = message.upper()
+    await ctx.send(message)
+
+  @commands.command()
+  async def lower(self, ctx, *, message: commands.clean_content):
+    message = message.lower()
+    await ctx.send(message)
+
+  @commands.command()
+  async def reverse(self, ctx, *, message: commands.clean_content):
+    message = message[::-1]
+    await ctx.send(message)
+
+
 
 def setup(client):
-  client.add_cog(User(client))
+  client.add_cog(Text(client))
