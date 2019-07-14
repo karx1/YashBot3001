@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 import typing
+import os
+
 
 
 client = commands.Bot(case_insensitive=True, command_prefix=":")
@@ -23,7 +25,7 @@ async def bot(ctx, member: typing.Union[discord.Member, discord.User], *, messag
 @client.command(hidden=True)
 @commands.is_owner()
 async def shutdown(ctx):
-    await ctx.send("Shutting Down...")
+    await ctx.send("Shutting Down")
     await client.close()
 
 @client.event
@@ -40,4 +42,6 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send(f"Error: {error_str}")
 
+
+token = open("./token.txt", 'r').read()
 client.run(token)
