@@ -64,4 +64,5 @@ class Info(commands.Cog):
     await ctx.send(f"I can see **{user_count}** users!")
 
 def setup(client):
+  client.help_command.cog = Info(client)
   client.add_cog(Info(client))
