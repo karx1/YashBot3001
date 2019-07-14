@@ -18,10 +18,7 @@ class Fun(commands.Cog):
     await ctx.send("Hi!")
 
   @commands.command(aliases=["8ball"])
-  async def ball(self, ctx, question):
-    if '?' not in question:
-      await ctx.send("You must ask a question!")
-      return
+  async def ball(self, ctx, *, question):
     possible_responses = [
       'That is a resounding no.',
       'It is not looking likely.',
