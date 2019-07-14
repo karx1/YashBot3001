@@ -286,4 +286,4 @@ class Image_(commands.Cog, name="Image"):
 
 
 def setup(client):
-  client.add_cog(Images(client))
+  client.add_cog(Image_(client))
