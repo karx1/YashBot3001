@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import typing
 
-class UserCog(commands.Cog):
+class User(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -17,7 +17,7 @@ class UserCog(commands.Cog):
     embed = discord.Embed(title="User info!", description=str(member), color=0x00ff00)
     embed.add_field(name="Activity:", value=member.activity)
     embed.add_field(name="Status:", value=f"Overall: {member.status}\nMobile: {member.mobile_status}\nDesktop: {member.desktop_status}\nWeb: {member.web_status}")
-    embed.add_field(name="Timestamps:", value=f"Created at: {member.created_at}\nJoined at: {member.joined_at}\nPremium since: {member.premium_since}")
+    embed.add_field(name="Timestamps:", value=f"Created at: {member.created_at}\nJoined at: {member.joined_at}\nBoosting since: {member.premium_since}")
     await ctx.send(embed=embed)
   
 
@@ -30,4 +30,4 @@ class UserCog(commands.Cog):
     await ctx.send(embed=embed)
 
 def setup(client):
-  client.add_cog(UserCog(client))
+  client.add_cog(User(client))
