@@ -10,13 +10,13 @@ class Owner(commands.Cog):
   def __init__(self, client):
     self.client = client
 
-  @commands.command()
+  @commands.command(hidden=True)
   @is_me()
   async def test(self, ctx):
     await ctx.send(f"Test successful, {ctx.message.author.mention}")
 
 
-  @commands.command()
+  @commands.command(hidden=True)
   @is_me()
   async def poll(self, ctx, *, question=""):
     channel = self.client.get_channel(579317022740185098)
