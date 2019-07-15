@@ -108,20 +108,26 @@ if __name__ == '__main__':
 #the discord game activity
 @client.event
 async def on_ready():
-  user_count = len(client.users)
-  server_count = len(client.guilds)
   print("Existing Servers:")
   async for guild in client.fetch_guilds():
     print(guild.name)
   while True:
-    user_count = len(client.users)
-    server_count = len(client.guilds)
-    activity1 = discord.Activity(name=f'{user_count} users | {server_count} servers', type=discord.ActivityType.watching)
+    activity1 = discord.Activity(name=f'{len(client.users)} users | {len(client.guilds)} servers', type=discord.ActivityType.watching)
     await client.change_presence(activity=activity1)
     await asyncio.sleep(5)
     await client.change_presence(activity=discord.Game(name=";help"))
     await asyncio.sleep(5)
 
+@client.event
+async def on_message(message):
+  if message.guild:
+    if not message.content.startswith(";"):
+      if message.mentions:
+        if message.guild.me in message.mentions:
+          await message.channel.send("<:drakeNo:596577411777429525> Mentioning me\n<:drakeYea:596577437182197791> Using my prefix\n**IF YOU ARE IN A DM YOU DO NOT NEED A PREFIX**")
+          return
+
+  await client.process_commands(message)
 
 #initialises the bot
 keep_alive()
