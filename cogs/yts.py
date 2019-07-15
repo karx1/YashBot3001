@@ -6,7 +6,7 @@ def yts():
     return ctx.message.guild.id == 574596466773983244
   return commands.check(predicate)
 
-class YTS(commands.Cog):
+class YSS(commands.Cog):
   def __init__(self, client):
     self.client = client
 
@@ -46,4 +46,4 @@ class YTS(commands.Cog):
 
 
 def setup(client):
-  client.add_cog(YTS(client))
+  client.add_cog(YSS(client))
