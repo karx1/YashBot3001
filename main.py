@@ -5,6 +5,8 @@ import os
 import asyncio
 import sqlite3
 from jishaku.paginators import PaginatorInterface
+import wikipedia
+import datetime
 
 
 
@@ -14,34 +16,92 @@ async def get_prefix(client, message):
   else:
     return ";"
 
-class customContext(commands.Context):
-
-  async def make_table(self):
-    cur = sqlite3.connect('data.db').cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS tags (title TEXT, content TEXT)")
-    sqlite3.connect("data.db").commit()
-
-  async def make_tag(self, name, content):
-    con = sqlite3.connect('data.db')
-    cur = con.cursor()
-    cur.execute("INSERT INTO tags VALUES(?, ?)", (name.lower(), content))
-    con.commit()
-    print("done")
-  
-  async def get_tag(self, name):
-    cur = sqlite3.connect('data.db').cursor()
-    cur.execute("SELECT content FROM tags WHERE title=?", [name.lower()])
-    result = cur.fetchone()
-    return result[0]
-  
-  async def update_tag(self, name, content):
-    cur = sqlite3.connect('data.db').cursor()
-    cur.execute("UPDATE tags SET content=? WHERE title=?", (content, name.lower()))
-    sqlite3.connect('data.db').commit()
-
 class customBot(commands.Bot):
-  async def get_context(self, message, *, cls=None):
-    return await super().get_context(message, cls=customContext)
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+
+    extensions = [
+      'jishaku',
+      'cogs.fun',
+      'cogs.math',
+      'cogs.text',
+      'cogs.yts',
+      'cogs.web',
+      'cogs.other',
+      'cogs.owner',
+      'cogs.info',
+      'cogs.image',
+      'cogs.user',
+      'cogs.tags'
+      ]
+    
+    for e in extensions:
+      self.load_extension(e)
+
+  async def on_ready(self):
+    print("Existing Servers:")
+    async for guild in self.fetch_guilds():
+      print(guild.name)
+    while True:
+      activity1 = discord.Activity(name=f'{len(self.users)} users | {len(self.guilds)} servers', type=discord.ActivityType.watching)
+      await self.change_presence(activity=activity1)
+      await asyncio.sleep(5)
+      await self.change_presence(activity=discord.Game(name=";help"))
+      await asyncio.sleep(5)
+  
+  async def on_message(self, message):
+    if message.guild:
+      if not message.content.startswith(";"):
+        if message.mentions:
+          if message.guild.me in message.mentions:
+            await message.channel.send("<:drakeNo:596577411777429525> Mentioning me\n<:drakeYea:596577437182197791> Using my prefix\n**IF YOU ARE IN A DM YOU DO NOT NEED A PREFIX**")
+            return
+
+    await self.process_commands(message)
+  
+  async def on_command_error(self, ctx, error):
+    error_str = str(error)
+    error = getattr(error, 'original', error)
+    f = open('log.txt', 'a')
+    f.write("Error: {}\n".format(error))
+    f.close()
+    fi = open('log.txt', 'r')
+    print(fi.read())
+    if isinstance(error, commands.CommandNotFound):
+      return
+    elif isinstance(error, commands.CheckFailure):
+      await ctx.send("It looks like you can't use this command. If you believe this is a mistake, ask for help in the support server!")
+    elif isinstance(error, commands.MissingRequiredArgument):
+      await ctx.send(f"Looks like you forgot to provide `{error.param}`!")
+    elif isinstance(error, ZeroDivisionError):
+      await ctx.send("I can't divide by zero!")
+    elif isinstance(error, wikipedia.DisambiguationError):
+      embed = discord.Embed(title=f"{error.title} may refer to:", description="\n".join(error.options), colour=0x00ff00)
+      await ctx.send(embed=embed)
+    elif isinstance(error, wikipedia.PageError):
+      await ctx.send("That page does not exist.")
+    elif isinstance(error, TypeError):
+      if ctx.command.qualified_name == 'show':
+        await ctx.send("Tag not found.")
+      elif ctx.command.qualified_name == 'raw':
+        await ctx.send("Tag not found.")
+    else:
+      await ctx.send("Error: {}".format(error_str))
+
+  async def process_commands(self, message):
+    ctx = await super().get_context(message, cls=commands.Context)
+    await self.invoke(ctx)
+
+  async def on_guild_join(self, guild):
+    channel = self.fetch_channel(580383812438065193)
+    time = datetime.datetime.now()
+    await channel.send(f"Joined server {guild} at {time}")
+
+  async def on_guild_remove(self, guild):
+    channel = self.fetch_channel(580383812438065193)
+    time = datetime.datetime.now()
+    await channel.send(f"Left server {guild} at {time}")
+
 
 client = customBot(command_prefix=get_prefix, case_insensitive=True)
 
@@ -84,53 +144,17 @@ class MinimalEmbedPaginatorHelp(commands.MinimalHelpCommand):
 
 client.help_command = MinimalEmbedPaginatorHelp()
 
-extensions = [
-  'jishaku',
-  'cogs.fun',
-  'cogs.math',
-  'cogs.text',
-  'cogs.yts',
-  'cogs.web',
-  'cogs.other',
-  'cogs.owner',
-  'cogs.events',
-  'cogs.info',
-  'cogs.image',
-  'cogs.user',
-  'cogs.tags'
-]
 
-if __name__ == '__main__':
-  for e in extensions:
-    client.load_extension(e)
 
 
 #the discord game activity
-@client.event
-async def on_ready():
-  print("Existing Servers:")
-  async for guild in client.fetch_guilds():
-    print(guild.name)
-  while True:
-    activity1 = discord.Activity(name=f'{len(client.users)} users | {len(client.guilds)} servers', type=discord.ActivityType.watching)
-    await client.change_presence(activity=activity1)
-    await asyncio.sleep(5)
-    await client.change_presence(activity=discord.Game(name=";help"))
-    await asyncio.sleep(5)
 
-@client.event
-async def on_message(message):
-  if message.guild:
-    if not message.content.startswith(";"):
-      if message.mentions:
-        if message.guild.me in message.mentions:
-          await message.channel.send("<:drakeNo:596577411777429525> Mentioning me\n<:drakeYea:596577437182197791> Using my prefix\n**IF YOU ARE IN A DM YOU DO NOT NEED A PREFIX**")
-          return
 
-  await client.process_commands(message)
+
+
 
 #initialises the bot
 keep_alive()
 #the token is stored in an .env file. If you fork this, you have to recreate that with the token inside
-code = os.environ.get("BOT_TOKEN")
-client.run(code)
+token = os.environ.get("BOT_TOKEN")
+client.run(token, bot=True, reconnect=True)
