@@ -8,7 +8,13 @@ class customBetaBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.load_extension("jishaku")
+        extensions = [
+            'jishaku',
+            'cogs.music'
+        ]
+
+        for e in extensions:
+            self.load_extension(e)
 
     async def on_ready(self):
         print(f"Logged in as: {client.user}")
