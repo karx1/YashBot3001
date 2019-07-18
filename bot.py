@@ -33,7 +33,7 @@ class customBetaBot(commands.Bot):
         else:
             await ctx.send(f"Error: {error_str}")
 
-client = customBetaBot(case_insensitive=True, command_prefix=":")
+client = customBetaBot(case_insensitive=True, command_prefix=commands.when_mentioned_or(":"))
 
 
 
