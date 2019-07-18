@@ -12,9 +12,11 @@ import datetime
 
 async def get_prefix(client, message):
   if message.guild is None:
-    return [";", ""]
+    prefixes = [";", ""]
   else:
-    return ";"
+    prefixes = [";"]
+  
+  return commands.when_mentioned_or(*prefixes)(client, message)
 
 class customBot(commands.Bot):
   def __init__(self, *args, **kwargs):
@@ -32,7 +34,7 @@ class customBot(commands.Bot):
       'cogs.info',
       'cogs.image',
       'cogs.user',
-      'cogs.tags'
+      'cogs.tags',
       ]
     
     for e in extensions:
@@ -49,15 +51,7 @@ class customBot(commands.Bot):
       await self.change_presence(activity=discord.Game(name=";help"))
       await asyncio.sleep(5)
   
-  async def on_message(self, message):
-    if message.guild:
-      if not message.content.startswith(";"):
-        if message.mentions:
-          if message.guild.me in message.mentions:
-            await message.channel.send("<:drakeNo:596577411777429525> Mentioning me\n<:drakeYea:596577437182197791> Using my prefix\n**IF YOU ARE IN A DM YOU DO NOT NEED A PREFIX**")
-            return
 
-    await self.process_commands(message)
   
   async def on_command_error(self, ctx, error):
     error_str = str(error)
