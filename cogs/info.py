@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 import datetime
+import inspect
+import os
 
 class counter:
   start_time = datetime.datetime.now()
@@ -42,8 +44,38 @@ class Info(commands.Cog):
     await ctx.send(embed=embed)
 
   @commands.command()
-  async def source(self, ctx):
-    await ctx.send("My code can be found here: https://github.com/nerdstep710/YashBot3001")
+  async def source(self, ctx, *, command: str = None):
+        """Displays my full source code or for a specific command.
+        To display the source code of a subcommand you can separate it by
+        periods, e.g. tag.create for the create subcommand of the tag command
+        or by spaces.
+        """
+        source_url = 'https://github.com/nerdstep710/YashBot3001'
+        branch = 'master'
+        if command is None:
+            return await ctx.send(source_url)
+
+        if command == 'help':
+            src = type(self.client.help_command)
+            module = src.__module__
+            filename = inspect.getsourcefile(src)
+        else:
+            obj = self.client.get_command(command.replace('.', ' '))
+            if obj is None:
+                return await ctx.send('Could not find command.')
+
+            # since we found the command we're looking for, presumably anyway, let's
+            # try to access the code itself
+            src = obj.callback.__code__
+            module = obj.callback.__module__
+            filename = src.co_filename
+
+        lines, firstlineno = inspect.getsourcelines(src)
+
+        location = os.path.relpath(filename).replace('\\', '/')
+
+        final_url = f'<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
+        await ctx.send(final_url)
 
   @commands.command()
   async def uptime(self, ctx):
