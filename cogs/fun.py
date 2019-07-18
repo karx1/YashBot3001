@@ -6,6 +6,8 @@ import asyncio
 from random import getrandbits
 from ipaddress import IPv4Address, IPv6Address
 from random import randint
+import typing
+import aiohttp
 
 class Fun(commands.Cog):
   def __init__(self, client):
@@ -54,6 +56,10 @@ class Fun(commands.Cog):
     winner = random.choice(possible_responses)
     await ctx.send(winner)
 
+  @commands.command()
+  async def choose(self, ctx, *args):
+    choice = random.choice(args)
+    await ctx.send(f"I choose {choice}!")
 
   @commands.command()
   async def kill(self, ctx, *, target=""):
@@ -69,6 +75,10 @@ class Fun(commands.Cog):
     if target is "":
       target = ctx.message.author.display_name
     await ctx.send(f"{target} was killed!")
+
+  @commands.command()
+  async def tell(self, ctx, member: typing.Union[discord.Member, discord.User], *, message):
+    await ctx.send(f"{ctx.author.mention} said \"{message}\" to {member.mention}!")
 
   @commands.command()
   async def rate(self, ctx, *, member: discord.Member = None):
@@ -292,6 +302,13 @@ class Fun(commands.Cog):
         await m.delete()
         await ctx.send("You decided not to pick up the sword. This may have been a mistake.")
 
+  @commands.command()
+  async def bitcoin(self, ctx):
+    url = 'https://api.coindesk.com/v1/bpi/currentprice/BTC.json'
+    async with aiohttp.ClientSession() as session:
+      raw_response = await session.get(url)
+      response = await raw_response.json(content_type='application/javascript')
+      await ctx.send(f"Bitcoin price is: ${response['bpi']['USD']['rate']}")
 
 def setup(client):
   client.add_cog(Fun(client))
