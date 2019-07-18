@@ -9,6 +9,7 @@ c = counter()
 class Info(commands.Cog):
   def __init__(self, client):
     self.client = client
+    client.help_command.cog = self
 
   @commands.command()
   async def invite(self, ctx):
@@ -19,7 +20,7 @@ class Info(commands.Cog):
     embed.add_field(name="YashBot3001", value="[Invite YashBot3001](https://yashbot3001--nerdstep710.repl.co/invite)", inline=False)
     embed.add_field(name="Uno Reverse Card", value="[Invite Uno Reverse Card](https://discordapp.com/api/oauth2/authorize?scope=bot&client_id=565565207326490624)", inline=False)
     embed.add_field(name="Support Server", value="[Join the Support Server](https://discord.gg/hG6RDZz)")
-    embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
+    embed.set_thumbnail(url=str(ctx.guild.me.avatar_url))
     embed.set_author(name=name, icon_url=avy)
     embed.set_footer(text=datetime.datetime.now())
     await ctx.send(embed=embed)
@@ -31,11 +32,11 @@ class Info(commands.Cog):
     users = len(self.client.users)
     servers = len(self.client.guilds)
     embed=discord.Embed(title="", description="", color=0x00ff00)
-    embed.add_field(name="YashBot3001 info", value="This bot was made by Yash Karandikar. It has 1015 lines of code, is written in Python 3.7, and uses discord.py 1.1.1.\nEnjoy!", inline=False)
+    embed.add_field(name="YashBot3001 info", value="This bot was made by Yash Karandikar. It is spread out in 20 files, is written in Python 3.7, and uses discord.py 1.1.1.\nEnjoy!", inline=False)
     embed.add_field(name="Prefix", value=";", inline=False)
     embed.add_field(name="Changelog", value="[Check out the changelog here!](https://tinyurl.com/yashrobot)", inline=False)
     embed.add_field(name="Users", value=f"This bot can see {users} users and {servers} servers.")
-    embed.set_thumbnail(url="https://t7.rbxcdn.com/68430bd256a968981b749621ef547fec")
+    embed.set_thumbnail(url=str(ctx.guild.me.avatar_url))
     embed.set_author(name=name, icon_url=avy)
     embed.set_footer(text=datetime.datetime.now())
     await ctx.send(embed=embed)
