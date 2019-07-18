@@ -77,6 +77,11 @@ class Fun(commands.Cog):
     await ctx.send(f"{target} was killed!")
 
   @commands.command()
+  async def eat(self, ctx, *, meal = None):
+    await ctx.send(f"{meal} was eaten by {ctx.message.author.display_name}!")
+
+
+  @commands.command()
   async def tell(self, ctx, member: typing.Union[discord.Member, discord.User], *, message):
     await ctx.send(f"{ctx.author.mention} said \"{message}\" to {member.mention}!")
 
