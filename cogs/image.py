@@ -4,7 +4,6 @@ from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageFilter, ImageOps
 import textwrap
 import matplotlib.pyplot as pp
-from concurrent.futures import ThreadPoolExecutor
 from .utils import async_executor
 import numpy as np
 import copy
@@ -85,6 +84,38 @@ def process_transform(img1, img2):
         )
     buff.seek(0)
     return buff
+
+@async_executor()
+def do_deepfry(img):
+    im = pp.imread(BytesIO(img), 'RGBA')
+    im2 = Image.fromarray(im)
+    contrast = ImageEnhance.Contrast(im2)
+    im2 = contrast.enhance(1000)
+    sharpness = ImageEnhance.Sharpness(im2)
+    im2 = sharpness.enhance(1000)
+    color = ImageEnhance.Color(im2)
+    im2 = color.enhance(1000)
+    brightness = ImageEnhance.Brightness(im2)
+    im2 = brightness.enhance(1000)
+    io = BytesIO()
+    im2.save(io, format="png")
+    io.seek(0)
+    return io
+
+@async_executor()
+def do_invert(ctx, image):
+    bio = BytesIO()
+    with ctx.typing():
+      if image.mode == 'RGBA':
+        r,g,b,a = image.split()
+        rgb_image = Image.merge('RGB', (r,g,b))
+        inverted_image = ImageOps.invert(rgb_image)
+        inverted_image.save(bio, format="png")
+      else:
+        im1 = ImageOps.invert(image)
+        im1.save(bio, format="png")
+      bio.seek(0)
+      return bio
 
 class Image_(commands.Cog, name="Image"):
   def __init__(self, client):
@@ -201,20 +232,8 @@ class Image_(commands.Cog, name="Image"):
     member = member or ctx.message.author
     m = member.avatar_url_as(format='png')
     m = await m.read()
-    im = pp.imread(BytesIO(m), 'RGBA')
-    im2 = Image.fromarray(im)
-    contrast = ImageEnhance.Contrast(im2)
-    im2 = contrast.enhance(1000)
-    sharpness = ImageEnhance.Sharpness(im2)
-    im2 = sharpness.enhance(1000)
-    color = ImageEnhance.Color(im2)
-    im2 = color.enhance(1000)
-    brightness = ImageEnhance.Brightness(im2)
-    im2 = brightness.enhance(1000)
-    io = BytesIO()
-    im2.save(io, format="png")
-    io.seek(0)
-    await ctx.send(file = discord.File(io, "out.png"))
+    buff = await do_deepfry(m)
+    await ctx.send(file=discord.File(buff, "out.png"))
 
   @commands.command(aliases=["gs", "greyscale"])
   async def grayscale(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
@@ -247,19 +266,9 @@ class Image_(commands.Cog, name="Image"):
     i = member.avatar_url_as(format='png')
     j = await i.read()
     io = BytesIO(j)
-    bio = BytesIO()
     image = Image.open(io)
-    async with ctx.typing():
-      if image.mode == 'RGBA':
-        r,g,b,a = image.split()
-        rgb_image = Image.merge('RGB', (r,g,b))
-        inverted_image = ImageOps.invert(rgb_image)
-        inverted_image.save(bio, format="png")
-      else:
-        im1 = ImageOps.invert(image)
-        im1.save(bio, format="png")
-      bio.seek(0)
-      await ctx.send(file=discord.File(bio, 'out.png'))
+    buff = await do_invert(ctx, image)
+    await ctx.send(file=discord.File(buff, 'out.png'))
 
   @commands.command()
   async def transform(
