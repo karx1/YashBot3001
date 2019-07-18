@@ -85,7 +85,7 @@ class Tags(commands.Cog):
       i += 1
       x.append(f"{i}. {result}")
     embed = discord.Embed(title="Tag List", description="\n".join(x), colour=0x00ff00)
-    embed.set_thumbnail(str(ctx.guild.me.avatar_url))
+    embed.set_thumbnail(url=str(ctx.guild.me.avatar_url))
     await ctx.send(embed=embed)
     
   @commands.command()
@@ -99,7 +99,7 @@ class Tags(commands.Cog):
       i += 1
       x.append(f"{i}. {result}")
     embed = discord.Embed(title=f"Results for {query}", description="\n".join(x), colour=0x00ff00)
-    embed.set_thumbnail(str(ctx.guild.me.avatar_url))
+    embed.set_thumbnail(url=str(ctx.guild.me.avatar_url))
     await ctx.send(embed=embed)
 
 def setup(client):
