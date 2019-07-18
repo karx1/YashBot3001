@@ -1,4 +1,5 @@
 discord.py==1.2.2
+youtube_dl
 
 
 Please note that this is a growing and evolving document. Over time I will be adding more and more requirements.
