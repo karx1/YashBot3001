@@ -3,7 +3,6 @@ from discord.ext import commands
 from keep_alive import keep_alive
 import os
 import asyncio
-import sqlite3
 from jishaku.paginators import PaginatorInterface
 import wikipedia
 import datetime
