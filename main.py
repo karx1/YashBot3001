@@ -9,7 +9,6 @@ import wikipedia
 import datetime
 
 
-
 async def get_prefix(client, message):
   if message.guild is None:
     prefixes = [";", ""]
@@ -56,11 +55,6 @@ class customBot(commands.Bot):
   async def on_command_error(self, ctx, error):
     error_str = str(error)
     error = getattr(error, 'original', error)
-    f = open('log.txt', 'a')
-    f.write("Error: {}\n".format(error))
-    f.close()
-    fi = open('log.txt', 'r')
-    print(fi.read())
     if isinstance(error, commands.CommandNotFound):
       return
     elif isinstance(error, commands.CheckFailure):
@@ -81,6 +75,13 @@ class customBot(commands.Bot):
         await ctx.send("Tag not found.")
     else:
       await ctx.send("Error: {}".format(error_str))
+    
+    
+    f = open('log.txt', 'a')
+    f.write("Error: {}\n".format(error))
+    f.close()
+    fi = open('log.txt', 'r')
+    print(fi.read())
 
   async def process_commands(self, message):
     ctx = await super().get_context(message, cls=commands.Context)
@@ -137,13 +138,6 @@ class MinimalEmbedPaginatorHelp(commands.MinimalHelpCommand):
         await interface.send_to(destination)
 
 client.help_command = MinimalEmbedPaginatorHelp()
-
-
-
-
-#the discord game activity
-
-
 
 
 

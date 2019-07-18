@@ -9,11 +9,9 @@ import aiohttp
 import textwrap
 
 
-
 class Web(commands.Cog):
   def __init__(self, client):
     self.client = client
-
 
   @commands.command()
   async def google(self, ctx, *, query):
@@ -27,8 +25,7 @@ class Web(commands.Cog):
       gasync = await self.client.loop.run_in_executor(ThreadPoolExecutor(), gsync)
       await ctx.send(gasync)
 
-      
-
+    
   @commands.command()
   async def youtube(self, ctx, *, query):
     def ytsync(query=query):
@@ -47,8 +44,6 @@ class Web(commands.Cog):
       await ctx.send(ytasync)
 
 
-    
-
   @commands.command(aliases=["wikipedia", "define"])
   async def wiki(self, ctx, *, query):
     c = wikipedia.summary(query)
@@ -59,7 +54,7 @@ class Web(commands.Cog):
         resp = await session.post('https://mystb.in/documents', data=h.encode())
         f = await resp.json()
         url = f'https://mystb.in/{f["key"]}'
-        await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
+        await ctx.send(f"Your result was too long for discord, so I put it here[pyfla instead! {url}")
     else:
       await ctx.send(content)
 

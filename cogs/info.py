@@ -41,9 +41,6 @@ class Info(commands.Cog):
     embed.set_footer(text=datetime.datetime.now())
     await ctx.send(embed=embed)
 
-  
-
-  
   @commands.command()
   async def source(self, ctx):
     await ctx.send("My code can be found here: https://github.com/nerdstep710/YashBot3001")
