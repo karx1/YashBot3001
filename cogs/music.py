@@ -67,9 +67,6 @@ class Music(commands.Cog):
         await channel.connect()
 
 
-
-
-
     @commands.command()
     async def play(self, ctx, *, url):
         """Streams from a url (same as yt, but doesn't predownload)"""
@@ -90,7 +87,7 @@ class Music(commands.Cog):
         ctx.voice_client.source.volume = volume / 100
         await ctx.send("Changed volume to {}%".format(volume))
 
-    @commands.command()
+    @commands.command(aliases=['disconnect'])
     async def stop(self, ctx):
         """Stops and disconnects the bot from voice"""
 
