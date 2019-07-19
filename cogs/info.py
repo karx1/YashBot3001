@@ -43,7 +43,7 @@ class Info(commands.Cog):
     embed.set_footer(text=datetime.datetime.now())
     await ctx.send(embed=embed)
 
-  @commands.command()
+  @commands.command(aliases=["src"])
   async def source(self, ctx, *, command: str = None):
         """Displays my full source code or for a specific command.
         To display the source code of a subcommand you can separate it by
@@ -62,7 +62,7 @@ class Info(commands.Cog):
         else:
             obj = self.client.get_command(command.replace('.', ' '))
             if obj is None:
-                return await ctx.send('Could not find command.')
+                return await ctx.send('https://github.com/nerdstep710/YashBot3001')
 
             # since we found the command we're looking for, presumably anyway, let's
             # try to access the code itself
