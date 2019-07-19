@@ -79,7 +79,6 @@ async def source(ctx, *, command: str = None):
             # since we found the command we're looking for, presumably anyway, let's
             # try to access the code itself
             src = obj.callback.__code__
-            module = obj.callback.__module__
             filename = src.co_filename
 
         lines, firstlineno = inspect.getsourcelines(src)
