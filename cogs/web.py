@@ -17,7 +17,6 @@ class Web(commands.Cog):
   async def google(self, ctx, *, query):
     def gsync(query=query):
       name = str(ctx.message.author)
-      name_plain = ctx.message.author.display_name
       for j in search(query, tld="com", num=1, stop=1):
         print(f"{name} has searched for '{query}' and it returned {j}")
         return j
