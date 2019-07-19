@@ -57,7 +57,6 @@ class Info(commands.Cog):
 
         if command == 'help':
             src = type(self.client.help_command)
-            module = src.__module__
             filename = inspect.getsourcefile(src)
         else:
             obj = self.client.get_command(command.replace('.', ' '))
@@ -67,7 +66,6 @@ class Info(commands.Cog):
             # since we found the command we're looking for, presumably anyway, let's
             # try to access the code itself
             src = obj.callback.__code__
-            module = obj.callback.__module__
             filename = src.co_filename
 
         lines, firstlineno = inspect.getsourcelines(src)
@@ -76,6 +74,8 @@ class Info(commands.Cog):
 
         final_url = f'<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
         await ctx.send(final_url)
+
+
 
   @commands.command()
   async def uptime(self, ctx):
