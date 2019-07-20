@@ -1,5 +1,7 @@
 discord.py==1.2.2
 youtube_dl
 
+You also need ffmpeg.
+
 
 Please note that this is a growing and evolving document. Over time I will be adding more and more requirements.
