@@ -39,7 +39,7 @@ class Text(commands.Cog):
     await ctx.send(embed=embed)
 
   @commands.command()
-  async def echo(self, ctx, *, message=""):
+  async def echo(self, ctx, *, message: commands.clean_content = ""):
     if message is "":
       message = ctx.message.author.display_name
     await ctx.send(message)
