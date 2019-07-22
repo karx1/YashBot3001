@@ -3,6 +3,7 @@ from discord.ext import commands
 import math
 from io import BytesIO
 from .utils import async_executor
+from discord.ext.commands.cooldowns import BucketType
 
 @async_executor()
 def factorial(ctx, n):
@@ -35,6 +36,7 @@ class Math(commands.Cog):
 	  await ctx.send(f"{number1} multiplied by {number2} is {multiplied_value}")
   
   @commands.command()
+  @commands.cooldown(1,15,BucketType.default) 
   async def factorial(self, ctx, number: int):
     answer = await factorial(ctx, number)
     if len(str(answer)) > 2000:
