@@ -14,8 +14,9 @@ class Math(commands.Cog):
 
   @commands.command()
   async def root(self, ctx, number):
-	  answer = math.sqrt(float(number))
-	  await ctx.send(f"The square root of {number} is {answer}")
+    """Shows the square root of a number"""
+    answer = math.sqrt(float(number))
+    await ctx.send(f"The square root of {number} is {answer}")
   
   @commands.command()
   async def multiply(self, ctx, number1, number2):
