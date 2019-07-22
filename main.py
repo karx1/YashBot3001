@@ -11,6 +11,8 @@ import datetime
 async def get_prefix(client, message):
   if message.guild is None:
     prefixes = [";", ""]
+  if message.author.id == 530064431909175346:
+    prefixes = [";", ""]
   else:
     prefixes = [";"]
   
