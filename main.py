@@ -78,6 +78,9 @@ class customBot(commands.Bot):
         await ctx.send("Tag not found.")
       elif ctx.command.qualified_name == 'raw':
         await ctx.send("Tag not found.")
+    elif isinstance(error, commands.CommandOnCooldown):
+      await ctx.send(f"This command is on cooldown. Try again in {round(error.retry_after, 2)}s")
+      return
     else:
       await ctx.send("Error: {}".format(error_str))
     
