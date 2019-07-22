@@ -1,18 +1,17 @@
 import discord
 from discord.ext import commands
 import math
-import aiohttp
-from concurrent.futures import ThreadPoolExecutor
-import asyncio
+from io import BytesIO
 from .utils import async_executor
 
-
-async def factorial(n):
-    f = 1
-    while (n > 0):
+@async_executor()
+def factorial(ctx, n):
+  with ctx.typing():
+      f = 1
+      while (n > 0):
         f = f * n
         n = n - 1
-    return f
+      return f
 
 
 class Math(commands.Cog):
@@ -37,13 +36,10 @@ class Math(commands.Cog):
   
   @commands.command()
   async def factorial(self, ctx, number: int):
-    answer = await factorial(number)
+    answer = await factorial(ctx, number)
     if len(str(answer)) > 2000:
-      async with aiohttp.ClientSession() as cs:
-        resp = await cs.post('https://mystb.in/documents', data=str(answer).encode())
-        f = await resp.json()
-        url = f'https://mystb.in/{f["key"]}'
-        await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
+      fp = discord.File(BytesIO(str(answer).encode("utf-8")), "out.txt")
+      await ctx.send("Your result was too long for discord, so I put it here instead!", file=fp)
     else:
       await ctx.send(answer)
 
