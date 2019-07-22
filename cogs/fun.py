@@ -21,6 +21,7 @@ class Fun(commands.Cog):
 
   @commands.command(aliases=["8ball"])
   async def ball(self, ctx, *, question):
+    """Answers a yes or no question"""
     possible_responses = [
       'That is a resounding no.',
       'It is not looking likely.',
@@ -275,6 +276,7 @@ class Fun(commands.Cog):
   
   @commands.command()
   async def maze(self, ctx):
+    """Maze Game!"""
     m = await ctx.send("Welcome to MAZE GAME!\ntype `start` to continue.")
     def check(m):
       return m.content.lower() == "start"
