@@ -3,7 +3,6 @@ from discord.ext import commands
 import sqlite3
 
 
-
 class Tags(commands.Cog):
   def __init__(self, client):
     self.client = client
@@ -12,10 +11,9 @@ class Tags(commands.Cog):
     self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
 
   
-
-
   @commands.command()
   async def make(self, ctx, name, *, content: commands.clean_content):
+    """Makes a tag"""
     self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
     self.cur.execute(f"INSERT INTO tags VALUES(?, ?)", (name.lower(), content))
     self.con.commit()
@@ -23,6 +21,7 @@ class Tags(commands.Cog):
   
   @commands.command()
   async def show(self, ctx, *, name):
+    """Displays the content of a tag"""
     self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
     self.cur.execute(f"SELECT content FROM tags WHERE title=?", [name.lower()])
     result = self.cur.fetchone()
@@ -30,6 +29,7 @@ class Tags(commands.Cog):
   
   @commands.command()
   async def edit(self, ctx, name, *, content: commands.clean_content):
+    """Edits a tag"""
     self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
     self.cur.execute(f"DELETE FROM tags WHERE title=?", [name.lower()])
     self.cur.execute(f"INSERT INTO tags VALUES(?, ?)", (name.lower(), content))
@@ -39,6 +39,7 @@ class Tags(commands.Cog):
 
   @commands.command()
   async def delete(self, ctx, *, name):
+    """Deletes a tag"""
     self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
     self.cur.execute(f"DELETE FROM tags WHERE title=?", [name.lower()])
     self.con.commit()
@@ -48,6 +49,7 @@ class Tags(commands.Cog):
 
   @commands.command()
   async def raw(self, ctx, *, name):
+    """Shows a tag with markdown escaped"""
     self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
     self.cur.execute(f"SELECT content FROM tags WHERE title=?", [name.lower()])
     result = self.cur.fetchone()
@@ -56,6 +58,7 @@ class Tags(commands.Cog):
 
   @commands.command()
   async def create(self, ctx):
+    """Walks you through the process fo making a tag"""
     self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
     await ctx.send(f"Hey! So I heard you want to make a tag. What's it gonna be called? Type your answer in the chat, or type {ctx.prefix}abort at any time to stop making a tag.")
     def check(m):
@@ -77,6 +80,7 @@ class Tags(commands.Cog):
 
   @commands.command()
   async def taglist(self, ctx):
+    """Shows the title of every tag"""
     self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
     results = [job[0] for job in self.cur.execute("SELECT title FROM tags")]
     x = []
@@ -90,6 +94,7 @@ class Tags(commands.Cog):
     
   @commands.command()
   async def tagsearch(self, ctx, *, query):
+    """Searches for all tags matching a query"""
     self.cur.execute("CREATE TABLE IF NOT EXISTS tags(title TEXT, content TEXT)")
     new_query = f"%{query.lower()}%"
     results = [job[0] for job in self.cur.execute("SELECT title FROM tags WHERE title LIKE ?", [new_query])]
