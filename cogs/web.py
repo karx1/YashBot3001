@@ -52,11 +52,8 @@ class Web(commands.Cog):
     content = f"{c}"
     if len(content) > 2000:
       h = "\n".join(textwrap.wrap(content, width=143))
-      async with aiohttp.ClientSession() as session:
-        resp = await session.post('https://mystb.in/documents', data=h.encode())
-        f = await resp.json()
-        url = f'https://mystb.in/{f["key"]}'
-        await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
+      url = await self.client.post_to_hastebin(h)
+      await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
     else:
       await ctx.send(content)
 
