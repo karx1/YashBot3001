@@ -56,7 +56,7 @@ class Web(commands.Cog):
         resp = await session.post('https://mystb.in/documents', data=h.encode())
         f = await resp.json()
         url = f'https://mystb.in/{f["key"]}'
-        await ctx.send(f"Your result was too long for discord, so I put it here[pyfla instead! {url}")
+        await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
     else:
       await ctx.send(content)
 
