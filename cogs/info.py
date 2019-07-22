@@ -47,7 +47,7 @@ class Info(commands.Cog):
   async def source(self, ctx, *, command: str = None):
         """Displays my full source code or for a specific command.
         To display the source code of a subcommand you can separate it by
-        periods, e.g. tag.create for the create subcommand of the tag command
+        periods, e.g. user.info for the info subcommand of the user command
         or by spaces.
         """
         source_url = 'https://github.com/nerdstep710/YashBot3001'
