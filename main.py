@@ -6,6 +6,7 @@ import asyncio
 from jishaku.paginators import PaginatorInterface
 import wikipedia
 import datetime
+import aiohttp
 
 
 async def get_prefix(client, message):
@@ -21,6 +22,7 @@ async def get_prefix(client, message):
 class customBot(commands.Bot):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
+    self.http2 = None
 
     extensions = [
       'jishaku',
@@ -44,6 +46,8 @@ class customBot(commands.Bot):
     print("Existing Servers:")
     async for guild in self.fetch_guilds():
       print(guild.name)
+    if not self.http2:
+      self.http2 = aiohttp.ClientSession()
     while True:
       activity1 = discord.Activity(name=f'{len(self.users)} users | {len(self.guilds)} servers', type=discord.ActivityType.watching)
       await self.change_presence(activity=activity1)
@@ -97,6 +101,16 @@ class customBot(commands.Bot):
     channel = self.fetch_channel(580383812438065193)
     time = datetime.datetime.now()
     await channel.send(f"Left server {guild} at {time}")
+
+
+  async def post_to_mystbin(self, data):
+        data = data.encode("utf-8")
+        async with self.http2.post("https://mystb.in/documents", data=data) as resp:
+            out = await resp.json()
+
+        assert "key" in out
+
+        return "https://mystb.in/" + out["key"]
 
 
 client = customBot(command_prefix=get_prefix, case_insensitive=True)
