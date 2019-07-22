@@ -1,6 +1,18 @@
 import discord
 from discord.ext import commands
 import math
+import aiohttp
+from concurrent.futures import ThreadPoolExecutor
+import asyncio
+from .utils import async_executor
+
+
+async def factorial(n):
+    f = 1
+    while (n > 0):
+        f = f * n
+        n = n - 1
+    return f
 
 
 class Math(commands.Cog):
@@ -23,14 +35,17 @@ class Math(commands.Cog):
 	  multiplied_value = float(number1) * float(number2)
 	  await ctx.send(f"{number1} multiplied by {number2} is {multiplied_value}")
   
-  @commands.command(aliases=["fact"])
-  async def factorial(self, ctx, number):
-    number = int(number)
-    if number > 802:
-      await ctx.send("Sorry, but your number is too big! We don't want Discord getting mad at us, after all.")
-      return
-    answer = math.factorial(number)
-    await ctx.send(f"{number} factorial is {answer}")
+  @commands.command()
+  async def factorial(self, ctx, number: int):
+    answer = await factorial(number)
+    if len(str(answer)) > 2000:
+      async with aiohttp.ClientSession() as cs:
+        resp = await cs.post('https://mystb.in/documents', data=str(answer).encode())
+        f = await resp.json()
+        url = f'https://mystb.in/{f["key"]}'
+        await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
+    else:
+      await ctx.send(answer)
 
   @commands.command()
   async def exp(self, ctx, number1, number2):
