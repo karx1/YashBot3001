@@ -15,6 +15,7 @@ class Web(commands.Cog):
 
   @commands.command()
   async def google(self, ctx, *, query):
+    """Searches Google"""
     def gsync(query=query):
       name = str(ctx.message.author)
       for j in search(query, tld="com", num=1, stop=1):
@@ -28,6 +29,7 @@ class Web(commands.Cog):
   @commands.command()
   async def youtube(self, ctx, *, query):
     def ytsync(query=query):
+      """Searches YouTube"""
       r = 0
       search = urllib.parse.quote(query)
       url = f"https://www.youtube.com/results?search_query={search}"
@@ -45,6 +47,7 @@ class Web(commands.Cog):
 
   @commands.command(aliases=["wikipedia", "define"])
   async def wiki(self, ctx, *, query):
+    """Searches Wikipedia"""
     c = wikipedia.summary(query)
     content = f"{c}"
     if len(content) > 2000:
