@@ -107,13 +107,13 @@ class customBot(commands.Bot):
 
 
   async def post_to_mystbin(self, data):
-        data = data.encode("utf-8")
+        data = str(data).encode("utf-8")
         async with self.http2.post("https://mystb.in/documents", data=data) as resp:
             out = await resp.json()
 
         assert "key" in out
 
-        return "https://mystb.in/" + out["key"]
+        return "https://mystb.in/raw/" + out["key"]
 
 
 client = customBot(command_prefix=get_prefix, case_insensitive=True)
