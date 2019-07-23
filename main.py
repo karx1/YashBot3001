@@ -37,6 +37,7 @@ class customBot(commands.Bot):
       'cogs.image',
       'cogs.user',
       'cogs.tags',
+      'cogs.bfd'
       ]
     
     for e in extensions:
