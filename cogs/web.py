@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 import wikipedia
 import aiohttp
 import textwrap
+from io import BytesIO
 
 
 class Web(commands.Cog):
@@ -51,9 +52,12 @@ class Web(commands.Cog):
     c = wikipedia.summary(query)
     content = f"{c}"
     if len(content) > 2000:
-      h = "\n".join(textwrap.wrap(content, width=143))
-      url = await self.client.post_to_hastebin(h)
-      await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
+      try:
+        url = await self.client.post_to_mystbin(content)
+        await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
+      except (aiohttp.ContentTypeError, AssertionError):
+        fp = discord.File(BytesIO(str(content).encode("utf-8")), "out.txt")
+        await ctx.send("Your result was too long for discord, so I put it here instead!", file=fp)
     else:
       await ctx.send(content)
 
