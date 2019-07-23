@@ -13,7 +13,7 @@ class bfd(commands.Cog, name="Bots for Discord"):
   
   @commands.command()
   async def votes(self, ctx):
-    async with self.client.http2.get(f"https://botsfordiscord.com/api/bot/{self.client.user.id}/votes") as resp:
+    async with self.client.http3.get(f"https://botsfordiscord.com/api/bot/{self.client.user.id}/votes") as resp:
       data = await resp.json()
       try:
         assert "votes" in data
