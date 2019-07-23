@@ -23,6 +23,7 @@ class customBot(commands.Bot):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.http2 = None
+    self.http3 = None
 
     extensions = [
       'jishaku',
@@ -48,7 +49,9 @@ class customBot(commands.Bot):
     async for guild in self.fetch_guilds():
       print(guild.name)
     if not self.http2:
-      self.http2 = aiohttp.ClientSession()
+      self.http = aiohttp.ClientSession()
+    if not self.http3:
+      self.http2 = aiohttp.ClientSession(headers={"Authorization": "cce0575985727a5e75264b4baf9523251cb429f9f6941d39b853acac6b3eca8df42c27fccf5682cd8b661930600b6bab471a9e97eba7e75df4ac2d7bfc1bf4d7"})
     while True:
       activity1 = discord.Activity(name=f'{len(self.users)} users | {len(self.guilds)} servers', type=discord.ActivityType.watching)
       await self.change_presence(activity=activity1)
