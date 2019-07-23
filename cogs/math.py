@@ -4,6 +4,7 @@ import math
 from io import BytesIO
 from .utils import async_executor
 from discord.ext.commands.cooldowns import BucketType
+import aiohttp
 
 @async_executor()
 def factorial(ctx, n):
@@ -38,10 +39,17 @@ class Math(commands.Cog):
   @commands.command()
   @commands.cooldown(1,15,BucketType.default) 
   async def factorial(self, ctx, number: int):
+    if number > 99999:
+      await ctx.send("Sorry, but this command is capped at 99999. Maybe try again?")
+      return
     answer = await factorial(ctx, number)
     if len(str(answer)) > 2000:
-      fp = discord.File(BytesIO(str(answer).encode("utf-8")), "out.txt")
-      await ctx.send("Your result was too long for discord, so I put it here instead!", file=fp)
+      try:
+        url = await ctx.bot.post_to_mystbin(answer)
+        await ctx.send(f"Your result was too long for discord, so I put it here instead! {url}")
+      except (aiohttp.ContentTypeError, AssertionError):
+        fp = discord.File(BytesIO(str(answer).encode("utf-8")), "out.txt")
+        await ctx.send("Your result was too long for discord, so I put it here instead!", file=fp)
     else:
       await ctx.send(answer)
 
