@@ -72,7 +72,6 @@ def process_transform(img1, img2):
     if img2.mode != "RGB":
         img2 = img2.convert("RGB")
     frames = process_sorting(img1, img2)
-
     buff = BytesIO()
     frames[0].save(
             buff,
@@ -123,6 +122,17 @@ def do_emboss(img):
   io.seek(0)
   return io
 
+@async_executor()
+def do_sort(img):
+  arr = np.array(img)
+  arr = np.sort(arr, axis=1, kind="mergesort")
+  im1 = Image.fromarray(arr)
+  bio = BytesIO()
+  im1.save(bio, format="png")
+  bio.seek(0)
+  return bio
+
+
 async def process_single_arg(ctx, argument):
     if argument is None:
         is_found = False
@@ -150,9 +160,15 @@ async def process_single_arg(ctx, argument):
             try:
                 img = Image.open(BytesIO(await resp.content.read())).convert("RGB")
             except OSError:
+              if ctx.command.qualified_name == "sort":
+                return #error handler caught it
+              else:
                 await ctx.send(":x: That URL is not an image.")
                 return
     except aiohttp.InvalidURL:
+      if ctx.command.qualified_name == "sort":
+        return #error handler caught it
+      else:
         await ctx.send(":x: That URL is invalid.")
         return
 
@@ -321,7 +337,12 @@ class Image_(commands.Cog, name="Image"):
 
             await ctx.send(file=discord.File(buff, "out.gif"))
 
-
+  @commands.command()
+  async def sort(self, ctx, url = None):
+    url = url or str(ctx.message.author.avatar_url)
+    img = await process_single_arg(ctx, url)
+    buff = await do_sort(img)
+    await ctx.send(file=discord.File(buff, "out.png"))
 
 def setup(client):
   client.add_cog(Image_(client))
