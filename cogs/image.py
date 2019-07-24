@@ -3,11 +3,11 @@ from discord.ext import commands
 from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageFilter, ImageOps
 import textwrap
-import matplotlib.pyplot as pp
 from .utils import async_executor
 import numpy as np
 import copy
 import typing
+import aiohttp
 
 def link(arr, arr2):
     rgb1 = arr.reshape((arr.shape[0] * arr.shape[1], 3))
@@ -86,9 +86,7 @@ def process_transform(img1, img2):
     return buff
 
 @async_executor()
-def do_deepfry(img):
-    im = pp.imread(BytesIO(img), 'RGBA')
-    im2 = Image.fromarray(im)
+def do_deepfry(im2):
     contrast = ImageEnhance.Contrast(im2)
     im2 = contrast.enhance(1000)
     sharpness = ImageEnhance.Sharpness(im2)
@@ -116,6 +114,49 @@ def do_invert(ctx, image):
         im1.save(bio, format="png")
       bio.seek(0)
       return bio
+
+@async_executor()
+def do_emboss(img):
+  im1 = img.filter(ImageFilter.EMBOSS)
+  io = BytesIO()
+  im1.save(io, format="png")
+  io.seek(0)
+  return io
+
+async def process_single_arg(ctx, argument):
+    if argument is None:
+        is_found = False
+        for att in ctx.message.attachments:
+            if att.height is not None and not is_found:
+                url = att.proxy_url
+                is_found = True
+        if not is_found:
+            url = str(ctx.author.avatar_url_as(format="png", size=1024))
+    else:
+        try:
+            url = str(
+                (await commands.MemberConverter().convert(ctx, argument)).avatar_url_as(format="png", size=1024)
+            )
+        except commands.BadArgument:
+            try:
+                url = str(
+                    (await commands.UserConverter().convert(ctx, argument)).avatar_url_as(format="png", size=1024)
+                )
+            except commands.BadArgument:
+                url = argument
+
+    try:
+        async with ctx.bot.http2.get(url) as resp:
+            try:
+                img = Image.open(BytesIO(await resp.content.read())).convert("RGB")
+            except OSError:
+                await ctx.send(":x: That URL is not an image.")
+                return
+    except aiohttp.InvalidURL:
+        await ctx.send(":x: That URL is invalid.")
+        return
+
+    return img
 
 class Image_(commands.Cog, name="Image"):
   def __init__(self, client):
@@ -228,45 +269,33 @@ class Image_(commands.Cog, name="Image"):
     await ctx.send(embed=embed)
 
   @commands.command()
-  async def deepfry(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
-    member = member or ctx.message.author
-    m = member.avatar_url_as(format='png')
-    m = await m.read()
+  async def deepfry(self, ctx, *, url = None):
+    url = url or str(ctx.message.author.avatar_url)
+    m = await process_single_arg(ctx, url)
     buff = await do_deepfry(m)
     await ctx.send(file=discord.File(buff, "out.png"))
 
   @commands.command(aliases=["gs", "greyscale"])
-  async def grayscale(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
-    member = member or ctx.message.author
-    i = member.avatar_url_as(format='png')
-    j = await i.read()
-    io = BytesIO(j)
-    io2 = BytesIO()
-    img = Image.open(io).convert('L')
-    img.save(io2, format="png")
-    io2.seek(0)
+  async def grayscale(self, ctx, *, url = None):
+    url = url or str(ctx.message.author.avatar_url)
+    im1 = await process_single_arg(ctx, url)
+    img = im1.convert('L')
+    io = BytesIO()
+    img.save(io, format="png")
+    io.seek(0)
+    await ctx.send(file=discord.File(io, "out.png"))
+
+  @commands.command()
+  async def emboss(self, ctx, *, url = None):
+    url = url or str(ctx.message.author.avatar_url)
+    img = await process_single_arg(ctx, url)
+    io2 = await do_emboss(img)
     await ctx.send(file=discord.File(io2, "out.png"))
 
   @commands.command()
-  async def emboss(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
-    member = member or ctx.message.author
-    i = member.avatar_url_as(format='png')
-    j = await i.read()
-    io = BytesIO(j)
-    io2 = BytesIO()
-    img = Image.open(io)
-    im1 = img.filter(ImageFilter.EMBOSS)
-    im1.save(io2, format="png")
-    io2.seek(0)
-    await ctx.send(file=discord.File(io2, "out.png"))
-
-  @commands.command()
-  async def invert(self, ctx, *, member: typing.Union[discord.Member, discord.User] = None):
-    member = member or ctx.message.author
-    i = member.avatar_url_as(format='png')
-    j = await i.read()
-    io = BytesIO(j)
-    image = Image.open(io)
+  async def invert(self, ctx, *, url = None):
+    url = url or str(ctx.message.author.avatar_url)
+    image = await process_single_arg(ctx, url)
     buff = await do_invert(ctx, image)
     await ctx.send(file=discord.File(buff, 'out.png'))
 
@@ -275,7 +304,7 @@ class Image_(commands.Cog, name="Image"):
           self, ctx,
           user: typing.Union[discord.Member, discord.User],
             *, other: typing.Union[discord.Member, discord.User] = None):
-        """Transform the avatar of one user to that of another and back. Credit goes to Capn#0001"""
+        """Transform the avatar of one user to that of another and back. Credit to Capn#0001"""
 
         other = other or ctx.author
 
