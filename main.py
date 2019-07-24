@@ -7,6 +7,7 @@ from jishaku.paginators import PaginatorInterface
 import wikipedia
 import datetime
 import aiohttp
+import numpy
 
 
 async def get_prefix(client, message):
@@ -85,6 +86,8 @@ class customBot(commands.Bot):
     elif isinstance(error, commands.CommandOnCooldown):
       await ctx.send(f"This command is on cooldown. Try again in {round(error.retry_after, 2)}s")
       return
+    elif isinstance(error, numpy.AxisError):
+      await ctx.send("That is not a valid image.")
     else:
       await ctx.send("Error: {}".format(error_str))
     
