@@ -88,6 +88,11 @@ class customBot(commands.Bot):
       return
     elif isinstance(error, numpy.AxisError):
       await ctx.send("That is not a valid image.")
+    elif "Cannot send an empty message" in error_str:
+      if ctx.command.qualified_name == 'google':
+        await ctx.send('No results were found')
+      else:
+        await ctx.send("Error: {}".format(error_str))
     else:
       await ctx.send("Error: {}".format(error_str))
     
