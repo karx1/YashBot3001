@@ -125,12 +125,13 @@ def do_emboss(img):
 @async_executor()
 def do_sort(img):
   arr = np.array(img)
-  arr = np.sort(arr, axis=1, kind="mergesort")
+  arr = np.sort(arr, axis=1, kind="heapsort")
   im1 = Image.fromarray(arr)
   bio = BytesIO()
   im1.save(bio, format="png")
   bio.seek(0)
   return bio
+
 
 
 async def process_single_arg(ctx, argument):
@@ -340,9 +341,10 @@ class Image_(commands.Cog, name="Image"):
   @commands.command()
   async def sort(self, ctx, url = None):
     url = url or str(ctx.message.author.avatar_url)
-    img = await process_single_arg(ctx, url)
-    buff = await do_sort(img)
-    await ctx.send(file=discord.File(buff, "out.png"))
+    async with ctx.typing():
+      img = await process_single_arg(ctx, url)
+      buff = await do_sort(img)
+      await ctx.send(file=discord.File(buff, "out.png"))
 
 def setup(client):
   client.add_cog(Image_(client))
