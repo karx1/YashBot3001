@@ -297,17 +297,17 @@ class Image_(commands.Cog, name="Image"):
     url = url or str(ctx.message.author.avatar_url)
     im1 = await process_single_arg(ctx, url)
     img = im1.convert('L')
-    io = BytesIO()
-    img.save(io, format="png")
-    io.seek(0)
-    await ctx.send(file=discord.File(io, "out.png"))
+    buff = BytesIO()
+    img.save(buff, format="png")
+    buff.seek(0)
+    await ctx.send(file=discord.File(buff, "out.png"))
 
   @commands.command()
   async def emboss(self, ctx, *, url = None):
     url = url or str(ctx.message.author.avatar_url)
     img = await process_single_arg(ctx, url)
-    io2 = await do_emboss(img)
-    await ctx.send(file=discord.File(io2, "out.png"))
+    buff = await do_emboss(img)
+    await ctx.send(file=discord.File(buff, "out.png"))
 
   @commands.command()
   async def invert(self, ctx, *, url = None):
