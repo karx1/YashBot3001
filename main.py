@@ -170,7 +170,6 @@ class MinimalEmbedPaginatorHelp(commands.MinimalHelpCommand):
 client.help_command = MinimalEmbedPaginatorHelp()
 
 
-
 #initialises the bot
 keep_alive()
 #the token is stored in an .env file. If you fork this, you have to recreate that with the token inside
