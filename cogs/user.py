@@ -8,7 +8,7 @@ class User(commands.Cog):
 
   @commands.group(invoke_without_command=True)
   async def user(self, ctx):
-    await ctx.send("What? Did you expect something to happen?")
+    await ctx.send_help(ctx.command)
   
   @user.command()
   async def info(self, ctx, member: typing.Union[discord.Member, discord.User] = None):
