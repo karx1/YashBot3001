@@ -17,7 +17,8 @@ class bfd(commands.Cog, name="Bots for Discord"):
       data = await resp.json()
       try:
         assert "votes" in data
-        await ctx.send(data["votes"])
+        vote_count = data["votes"]
+        await ctx.send(f"**{self.client.user.display_name}** has **{vote_count}** votes!")
       except AssertionError:
         await ctx.send("Looks like the service is currently down. Please try again.")
   
