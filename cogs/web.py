@@ -61,10 +61,22 @@ class Web(commands.Cog):
     else:
       await ctx.send(content)
 
-  @commands.command()
-  async def reddit(self, ctx, query):
+  @commands.group(invoke_without_command=True, aliases=['r'])
+  async def reddit(self, ctx):
+    """Searches reddit for a subreddit or user"""
+    await ctx.send_help(ctx.command)
+
+  @reddit.command(aliases=['s'])
+  async def subreddit(self, ctx, query):
+    """Command for subreddit"""
     query = query.lower().replace(" ", "%20")
     await ctx.send(f"https://www.reddit.com/r/{query}/")
+  
+  @reddit.command(aliases=['u'])
+  async def user(self, ctx, query):
+    """Command for user"""
+    query = query.replace(" ", "%20")
+    await ctx.send(f"https://www.reddit.com/user/{query}")
 
 def setup(client):
   client.add_cog(Web(client))
