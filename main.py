@@ -162,10 +162,13 @@ class MinimalEmbedPaginatorHelp(commands.MinimalHelpCommand):
     """
 
     async def send_pages(self):
+      if isinstance(self.context.channel, discord.DMChannel):
+        destination = self.context.author
+      else:
         destination = self.get_destination()
 
-        interface = PaginatorEmbedInterface(self.context.bot, self.paginator, owner=self.context.author)
-        await interface.send_to(destination)
+      interface = PaginatorEmbedInterface(self.context.bot, self.paginator, owner=self.context.author)
+      await interface.send_to(destination)
 
 client.help_command = MinimalEmbedPaginatorHelp()
 
