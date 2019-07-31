@@ -88,7 +88,12 @@ class Tags(commands.Cog):
     for result in results:
       i += 1
       x.append(f"{i}. {result}")
-    embed = discord.Embed(title="Tag List", description="\n".join(x), colour=0x00ff00)
+    data = {
+      'title': "Tag List",
+      'description': "\n".join(x)
+    }
+    embed = discord.Embed.from_dict(data)
+    embed.colour = 0x00ff00
     embed.set_thumbnail(url=str(ctx.guild.me.avatar_url))
     await ctx.send(embed=embed)
     
@@ -103,7 +108,12 @@ class Tags(commands.Cog):
     for result in results:
       i += 1
       x.append(f"{i}. {result}")
-    embed = discord.Embed(title=f"Results for {query}", description="\n".join(x), colour=0x00ff00)
+    data = {
+      'title': f"Results for {query}",
+      'description': "\n".join(x)
+    }
+    embed = discord.Embed.from_dict(data)
+    embed.colour = 0x00ff00
     embed.set_thumbnail(url=str(ctx.guild.me.avatar_url))
     await ctx.send(embed=embed)
 
