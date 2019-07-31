@@ -65,7 +65,7 @@ class Fun(commands.Cog):
   @commands.command()
   async def kill(self, ctx, *, target=""):
     print("R.I.P " + str(target))
-    if target is "":
+    if target == "":
       target = ctx.message.author.display_name
     await ctx.send(f'{target} was killed!')
 
@@ -73,7 +73,7 @@ class Fun(commands.Cog):
   @commands.command()
   async def bully(self, ctx, *, target=""):
     print("Get him!")
-    if target is "":
+    if target == "":
       target = ctx.message.author.display_name
     await ctx.send(f"{target} was killed!")
 
@@ -88,7 +88,7 @@ class Fun(commands.Cog):
 
   @commands.command()
   async def rate(self, ctx, *, member: discord.Member = None):
-    if member is None:
+    if member == None:
       member = ctx.message.author
     possible_responses = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
     rating = random.choice(possible_responses)
@@ -141,14 +141,19 @@ class Fun(commands.Cog):
     w = self.client.latency
     w = w * 1000
     w = round(w, 4)
-    embed=discord.Embed(title="Pong!", description=f"Latency is {w} ms.", color=0x00ff00)
+    data = {
+      'title': "Pong!",
+      'description': f"Latency is {w} ms."
+    }
+    embed=discord.Embed.from_dict(data)
+    embed.colour = 0x00ff00
     embed.set_image(url="https://media.giphy.com/media/pWncxUrrNHdny/giphy.gif")
     await ctx.send(embed=embed)
 
 
   @commands.command()
   async def thanos(self, ctx, *, target=""):
-    if target is "":
+    if target == "":
       target = ctx.message.author.display_name
     possible_responses = [
       f'{target} was spared by the great titan Thanos.',
