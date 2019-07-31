@@ -3,15 +3,58 @@ from discord.ext import commands
 import datetime
 import inspect
 import os
+from jishaku.paginators import PaginatorInterface
 
 class counter:
   start_time = datetime.datetime.now()
 c = counter()
 
+class PaginatorEmbedInterface(PaginatorInterface):
+    """
+    A subclass of :class:`PaginatorInterface` that encloses content in an Embed.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self._embed = kwargs.pop('embed', None) or discord.Embed()
+        super().__init__(*args, **kwargs)
+
+    @property
+    def send_kwargs(self) -> dict:
+        display_page = self.display_page
+        self._embed.description = self.pages[display_page]
+        self._embed.set_footer(text=f'Page {display_page + 1}/{self.page_count}')
+        self._embed.colour = 0x00ff00
+        return {'embed': self._embed}
+
+    max_page_size = 2048
+
+    @property
+    def page_size(self) -> int:
+        return self.paginator.max_size
+
+class MinimalEmbedPaginatorHelp(commands.MinimalHelpCommand):
+    """
+    A subclass of :class:`commands.MinimalHelpCommand` that uses a PaginatorEmbedInterface for pages.
+    """
+
+    async def send_pages(self):
+      if isinstance(self.context.channel, discord.DMChannel):
+        destination = self.context.author
+      else:
+        destination = self.get_destination()
+
+      interface = PaginatorEmbedInterface(self.context.bot, self.paginator, owner=self.context.author)
+      await interface.send_to(destination)
+
 class Info(commands.Cog):
   def __init__(self, client):
     self.client = client
+    self._original_help_command = commands.MinimalHelpCommand()
+    client.help_command = MinimalEmbedPaginatorHelp()
     client.help_command.cog = self
+
+  def cog_unload(self):
+    self.client.help_command = self._original_help_command
 
   @commands.command()
   async def invite(self, ctx):
