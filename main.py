@@ -1,9 +1,8 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from keep_alive import keep_alive
 import os
 import asyncio
-from jishaku.paginators import PaginatorInterface
 import wikipedia
 import datetime
 import aiohttp
@@ -53,12 +52,8 @@ class customBot(commands.Bot):
       self.http2 = aiohttp.ClientSession()
     if not self.http3:
       self.http3 = aiohttp.ClientSession(headers={"Authorization": "cce0575985727a5e75264b4baf9523251cb429f9f6941d39b853acac6b3eca8df42c27fccf5682cd8b661930600b6bab471a9e97eba7e75df4ac2d7bfc1bf4d7"})
-    while True:
-      activity1 = discord.Activity(name=f'{len(self.users)} users | {len(self.guilds)} servers', type=discord.ActivityType.watching)
-      await self.change_presence(activity=activity1)
-      await asyncio.sleep(5)
-      await self.change_presence(activity=discord.Game(name=";help"))
-      await asyncio.sleep(5)
+    
+    change_status.start()
   
 
   
@@ -130,47 +125,17 @@ class customBot(commands.Bot):
 
 client = customBot(command_prefix=get_prefix, case_insensitive=True)
 
-client.remove_command('help')
 
-
-class PaginatorEmbedInterface(PaginatorInterface):
-    """
-    A subclass of :class:`PaginatorInterface` that encloses content in an Embed.
-    """
-
-    def __init__(self, *args, **kwargs):
-        self._embed = kwargs.pop('embed', None) or discord.Embed()
-        super().__init__(*args, **kwargs)
-
-    @property
-    def send_kwargs(self) -> dict:
-        display_page = self.display_page
-        self._embed.description = self.pages[display_page]
-        self._embed.set_footer(text=f'Page {display_page + 1}/{self.page_count}')
-        self._embed.colour = 0x00ff00
-        return {'embed': self._embed}
-
-    max_page_size = 2048
-
-    @property
-    def page_size(self) -> int:
-        return self.paginator.max_size
-
-class MinimalEmbedPaginatorHelp(commands.MinimalHelpCommand):
-    """
-    A subclass of :class:`commands.MinimalHelpCommand` that uses a PaginatorEmbedInterface for pages.
-    """
-
-    async def send_pages(self):
-      if isinstance(self.context.channel, discord.DMChannel):
-        destination = self.context.author
-      else:
-        destination = self.get_destination()
-
-      interface = PaginatorEmbedInterface(self.context.bot, self.paginator, owner=self.context.author)
-      await interface.send_to(destination)
-
-client.help_command = MinimalEmbedPaginatorHelp()
+@tasks.loop(seconds=10)
+async def change_status():
+  try:
+    activity1 = discord.Activity(name=f'{len(client.users)} users | {len(client.guilds)} servers', type=discord.ActivityType.watching)
+    await client.change_presence(activity=activity1)
+    await asyncio.sleep(10)
+    await client.change_presence(activity=discord.Game(name=";help"))
+  except Exception as e:
+    print(e)
+  
 
 
 #initialises the bot
