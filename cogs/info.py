@@ -61,7 +61,7 @@ class Info(commands.Cog):
     print("Advertising Start!")
     name = ctx.message.author.display_name
     avy = str(ctx.message.author.avatar_url)
-    embed=discord.Embed(title="Invite YashBot 3001", description="", color=0x00ff00)
+    embed = await self.client.embed(title="Invite YashBot3001")
     embed.add_field(name="YashBot3001", value="[Invite YashBot3001](https://yashbot3001--nerdstep710.repl.co/invite)", inline=False)
     embed.add_field(name="Uno Reverse Card", value="[Invite Uno Reverse Card](https://discordapp.com/api/oauth2/authorize?scope=bot&client_id=565565207326490624)", inline=False)
     embed.add_field(name="Support Server", value="[Join the Support Server](https://discord.gg/hG6RDZz)")
@@ -76,7 +76,7 @@ class Info(commands.Cog):
     avy = str(ctx.message.author.avatar_url)
     users = len(self.client.users)
     servers = len(self.client.guilds)
-    embed=discord.Embed(title="", description="", color=0x00ff00)
+    embed = await self.client.embed()
     embed.add_field(name="YashBot3001 info", value="This bot was made by Yash Karandikar. It is spread out in 20 files, is written in Python 3.7, and uses discord.py 1.1.1.\nEnjoy!", inline=False)
     embed.add_field(name="Prefix", value=";", inline=False)
     embed.add_field(name="Changelog", value="[Check out the changelog here!](https://tinyurl.com/yashrobot)", inline=False)

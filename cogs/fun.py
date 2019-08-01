@@ -34,7 +34,7 @@ class Fun(commands.Cog):
     name = str(ctx.message.author.display_name)
     answer = random.choice(possible_responses)
     avy = str(ctx.message.author.avatar_url)
-    embed=discord.Embed(title="", description="", color=0x00ff00)
+    embed = await self.client.embed()
     embed.add_field(name="Question", value=question, inline=False)
     embed.add_field(name="Answer", value=answer, inline=False)
     embed.set_thumbnail(url="https://www.horoscope.com/images-US/games/game-magic-8-ball-no-text.png")
@@ -141,11 +141,7 @@ class Fun(commands.Cog):
     w = self.client.latency
     w = w * 1000
     w = round(w, 4)
-    data = {
-      'title': "Pong!",
-      'description': f"Latency is {w} ms."
-    }
-    embed=discord.Embed.from_dict(data)
+    embed = await self.client.embed(title="Pong!", description=f"Latency is {w} ms.")
     embed.colour = 0x00ff00
     embed.set_image(url="https://media.giphy.com/media/pWncxUrrNHdny/giphy.gif")
     await ctx.send(embed=embed)
@@ -217,7 +213,7 @@ class Fun(commands.Cog):
     else:
       await ctx.send("You must either say rock, paper, or scissors!")
       return
-    embed=discord.Embed(title="", description="Rock Paper Scissors!", color=0x00ff00)
+    embed = await self.client.embed(description="Rock Paper Scissors!")
     embed.add_field(name=f"{name}'s Choice", value=choice, inline=False)
     embed.add_field(name="My Choice", value=var1, inline=False)
     embed.add_field(name="Results:", value=winner, inline=False)
