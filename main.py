@@ -24,6 +24,7 @@ class customBot(commands.Bot):
     super().__init__(*args, **kwargs)
     self.http2 = None
     self.http3 = None
+    self.embed_color = 0x00ff00
 
     extensions = [
       'jishaku',
@@ -121,6 +122,19 @@ class customBot(commands.Bot):
         assert "key" in out
 
         return "https://mystb.in/raw/" + out["key"]
+  
+  async def embed(self, *, title=None, description=None, color=None):
+    """A helper function that created discord.Embed objects"""
+    color = color or self.embed_color
+    title = title or ""
+    description = description or ""
+    data = {
+      'title': title,
+      'description': description,
+      'color': color
+    }
+    embed = discord.Embed.from_dict(data)
+    return embed
 
 
 client = customBot(command_prefix=get_prefix, case_insensitive=True)
