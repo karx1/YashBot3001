@@ -70,7 +70,7 @@ class customBot(commands.Bot):
     elif isinstance(error, ZeroDivisionError):
       await ctx.send("I can't divide by zero!")
     elif isinstance(error, wikipedia.DisambiguationError):
-      embed = discord.Embed(title=f"{error.title} may refer to:", description="\n".join(error.options), colour=0x00ff00)
+      embed = await self.embed(title=f"{error.title} may refer to:", description="\n".join(error.options))
       await ctx.send(embed=embed)
     elif isinstance(error, wikipedia.PageError):
       await ctx.send("That page does not exist.")
@@ -104,12 +104,18 @@ class customBot(commands.Bot):
     await self.invoke(ctx)
 
   async def on_guild_join(self, guild):
-    channel = self.fetch_channel(580383812438065193)
+    channel1 = self.get_channel(580383812438065193)
     time = datetime.datetime.now()
-    await channel.send(f"Joined server {guild} at {time}")
+    channel2 = discord.utils.get(guild.channels, name='general')
+    try: 
+      await channel2.send("Hey! I'm YashBot3001! Do ;help for more info!")
+    except:
+      pass
+    finally:
+      await channel1.send(f"Joined server {guild} at {time}")
 
   async def on_guild_remove(self, guild):
-    channel = self.fetch_channel(580383812438065193)
+    channel = self.get_channel(580383812438065193)
     time = datetime.datetime.now()
     await channel.send(f"Left server {guild} at {time}")
 
