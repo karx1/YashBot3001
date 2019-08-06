@@ -106,8 +106,8 @@ class customBot(commands.Bot):
   async def on_guild_join(self, guild):
     channel1 = self.get_channel(580383812438065193)
     time = datetime.datetime.now()
-    channel2 = discord.utils.get(guild.channels, name='general')
-    try: 
+    try:
+      channel2 = discord.utils.get(guild.channels, name='general')
       await channel2.send("Hey! I'm YashBot3001! Do ;help for more info!")
     except:
       pass
