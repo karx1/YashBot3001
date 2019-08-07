@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
 import wikipedia
 import aiohttp
-import textwrap
 from io import BytesIO
 
 
