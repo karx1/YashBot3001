@@ -27,7 +27,7 @@ class customBot(commands.Bot):
     self.http3 = None
     self.embed_color = 0x00ff00
     self.logger = logging.getLogger('discord')
-    self.logger.setLevel(logging.DEBUG)
+    self.logger.setLevel(logging.INFO)
     self.handler = logging.FileHandler(filename='bot.log', encoding='utf-8', mode='w')
     self.handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
     self.logger.addHandler(self.handler)
