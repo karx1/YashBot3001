@@ -129,17 +129,13 @@ class customBot(commands.Bot):
 
         return "https://mystb.in/raw/" + out["key"]
   
-  async def embed(self, *, title=None, description=None, color=None):
+  async def embed(self, *, title=None, description=None, color=None, colour=None):
     """A helper function that created discord.Embed objects"""
     color = color or self.embed_color
     title = title or ""
     description = description or ""
-    data = {
-      'title': title,
-      'description': description,
-      'color': color
-    }
-    embed = discord.Embed.from_dict(data)
+    colour = colour or color
+    embed = discord.Embed(title=title, description=description, color=colour)
     return embed
 
 
