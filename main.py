@@ -7,6 +7,7 @@ import wikipedia
 import datetime
 import aiohttp
 import numpy
+import logging
 
 
 async def get_prefix(client, message):
@@ -25,6 +26,11 @@ class customBot(commands.Bot):
     self.http2 = None
     self.http3 = None
     self.embed_color = 0x00ff00
+    self.logger = logging.getLogger('discord')
+    self.logger.setLevel(logging.DEBUG)
+    self.handler = logging.FileHandler(filename='bot.log', encoding='utf-8', mode='w')
+    self.handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+    self.logger.addHandler(self.handler)
 
     extensions = [
       'jishaku',
@@ -98,6 +104,8 @@ class customBot(commands.Bot):
     f.close()
     fi = open('log.txt', 'r')
     print(fi.read())
+    fii = open('bot.log', 'r')
+    print(fii.read())
 
   async def process_commands(self, message):
     ctx = await super().get_context(message, cls=commands.Context)
