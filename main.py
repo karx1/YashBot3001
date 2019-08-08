@@ -104,8 +104,6 @@ class customBot(commands.Bot):
     f.close()
     fi = open('log.txt', 'r')
     print(fi.read())
-    fii = open('bot.log', 'r')
-    print(fii.read())
 
   async def process_commands(self, message):
     ctx = await super().get_context(message, cls=commands.Context)
