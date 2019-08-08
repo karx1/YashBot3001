@@ -373,6 +373,7 @@ class Image_(commands.Cog, name="Image"):
 
   @commands.command()
   async def outline(self, ctx, url=None):
+    """Finds the edged of an image"""
     url = url or str(ctx.author.avatar_url)
     img = await process_single_arg(ctx, url)
     io = await do_outline(img)
@@ -380,6 +381,7 @@ class Image_(commands.Cog, name="Image"):
 
   @commands.command()
   async def sobel(self, ctx, url=None):
+    """Applies a 'sobel filter' to an image"""
     url = url or str(ctx.author.avatar_url)
     img = await process_single_arg(ctx, url)
     io = await do_sobel(ctx, img)
