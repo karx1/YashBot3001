@@ -132,7 +132,30 @@ def do_sort(img):
   bio.seek(0)
   return bio
 
+@async_executor()
+def do_outline(img):
+  img = img.filter(ImageFilter.FIND_EDGES)
+  io = BytesIO()
+  img.save(io, format='png')
+  io.seek(0)
+  return io
 
+@async_executor()
+def do_sobel(ctx, img):
+    img = img.filter(ImageFilter.FIND_EDGES)
+    io = BytesIO()
+    with ctx.typing():
+      if img.mode == 'RGBA':
+        r,g,b = img.split()
+        rgb_image = Image.merge('RGB', (r,g,b))
+        inverted_image = ImageOps.invert(rgb_image)
+        inverted_image.save(io, format="png")
+      else:
+        im1 = ImageOps.invert(img)
+        im1.save(io, format="png")
+    
+    io.seek(0)
+    return io
 
 async def process_single_arg(ctx, argument):
     if argument is None:
@@ -174,6 +197,8 @@ async def process_single_arg(ctx, argument):
         return
 
     return img
+
+
 
 class Image_(commands.Cog, name="Image"):
   def __init__(self, client):
@@ -345,6 +370,20 @@ class Image_(commands.Cog, name="Image"):
       img = await process_single_arg(ctx, url)
       buff = await do_sort(img)
       await ctx.send(file=discord.File(buff, "out.png"))
+
+  @commands.command()
+  async def outline(self, ctx, url=None):
+    url = url or str(ctx.author.avatar_url)
+    img = await process_single_arg(ctx, url)
+    io = await do_outline(img)
+    await ctx.send(file=discord.File(io, 'out.png'))
+
+  @commands.command()
+  async def sobel(self, ctx, url=None):
+    url = url or str(ctx.author.avatar_url)
+    img = await process_single_arg(ctx, url)
+    io = await do_sobel(ctx, img)
+    await ctx.send(file=discord.File(io, 'out.png'))
 
 def setup(client):
   client.add_cog(Image_(client))
