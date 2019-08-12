@@ -8,6 +8,7 @@ import numpy as np
 import copy
 import typing
 import aiohttp
+from .utils import process_url
 
 def link(arr, arr2):
     rgb1 = arr.reshape((arr.shape[0] * arr.shape[1], 3))
@@ -157,46 +158,7 @@ def do_sobel(ctx, img):
     io.seek(0)
     return io
 
-async def process_single_arg(ctx, argument):
-    if argument is None:
-        is_found = False
-        for att in ctx.message.attachments:
-            if att.height is not None and not is_found:
-                url = att.proxy_url
-                is_found = True
-        if not is_found:
-            url = str(ctx.author.avatar_url_as(format="png", size=1024))
-    else:
-        try:
-            url = str(
-                (await commands.MemberConverter().convert(ctx, argument)).avatar_url_as(format="png", size=1024)
-            )
-        except commands.BadArgument:
-            try:
-                url = str(
-                    (await commands.UserConverter().convert(ctx, argument)).avatar_url_as(format="png", size=1024)
-                )
-            except commands.BadArgument:
-                url = argument
 
-    try:
-        async with ctx.bot.http2.get(url) as resp:
-            try:
-                img = Image.open(BytesIO(await resp.content.read())).convert("RGB")
-            except OSError:
-              if ctx.command.qualified_name == "sort":
-                return #error handler caught it
-              else:
-                await ctx.send(":x: That URL is not an image.")
-                return
-    except aiohttp.InvalidURL:
-      if ctx.command.qualified_name == "sort":
-        return #error handler caught it
-      else:
-        await ctx.send(":x: That URL is invalid.")
-        return
-
-    return img
 
 
 
@@ -313,14 +275,14 @@ class Image_(commands.Cog, name="Image"):
   @commands.command()
   async def deepfry(self, ctx, *, url = None):
     url = url or str(ctx.message.author.avatar_url)
-    m = await process_single_arg(ctx, url)
+    m = await process_url(ctx, url)
     buff = await do_deepfry(m)
     await ctx.send(file=discord.File(buff, "out.png"))
 
   @commands.command(aliases=["gs", "greyscale"])
   async def grayscale(self, ctx, *, url = None):
     url = url or str(ctx.message.author.avatar_url)
-    im1 = await process_single_arg(ctx, url)
+    im1 = await process_url(ctx, url)
     img = im1.convert('L')
     buff = BytesIO()
     img.save(buff, format="png")
@@ -330,14 +292,14 @@ class Image_(commands.Cog, name="Image"):
   @commands.command()
   async def emboss(self, ctx, *, url = None):
     url = url or str(ctx.message.author.avatar_url)
-    img = await process_single_arg(ctx, url)
+    img = await process_url(ctx, url)
     buff = await do_emboss(img)
     await ctx.send(file=discord.File(buff, "out.png"))
 
   @commands.command()
   async def invert(self, ctx, *, url = None):
     url = url or str(ctx.message.author.avatar_url)
-    image = await process_single_arg(ctx, url)
+    image = await process_url(ctx, url)
     buff = await do_invert(ctx, image)
     await ctx.send(file=discord.File(buff, 'out.png'))
 
@@ -367,7 +329,7 @@ class Image_(commands.Cog, name="Image"):
   async def sort(self, ctx, url = None):
     url = url or str(ctx.message.author.avatar_url)
     async with ctx.typing():
-      img = await process_single_arg(ctx, url)
+      img = await process_url(ctx, url)
       buff = await do_sort(img)
       await ctx.send(file=discord.File(buff, "out.png"))
 
@@ -375,7 +337,7 @@ class Image_(commands.Cog, name="Image"):
   async def outline(self, ctx, url=None):
     """Finds the edged of an image"""
     url = url or str(ctx.author.avatar_url)
-    img = await process_single_arg(ctx, url)
+    img = await process_url(ctx, url)
     io = await do_outline(img)
     await ctx.send(file=discord.File(io, 'out.png'))
 
@@ -383,7 +345,7 @@ class Image_(commands.Cog, name="Image"):
   async def sobel(self, ctx, url=None):
     """Applies a 'sobel filter' to an image"""
     url = url or str(ctx.author.avatar_url)
-    img = await process_single_arg(ctx, url)
+    img = await process_url(ctx, url)
     io = await do_sobel(ctx, img)
     await ctx.send(file=discord.File(io, 'out.png'))
 
