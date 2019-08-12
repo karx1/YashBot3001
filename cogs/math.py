@@ -22,8 +22,8 @@ class Math(commands.Cog):
 
   @commands.command()
   async def square(self, ctx, number):
-	  squared_value = float(number) * float(number)
-	  await ctx.send(f"{number}² is {squared_value}")
+	  square = lambda x: float(x)**2
+	  await ctx.send(f"{number}² is {square(number)}")
 
   @commands.command()
   async def root(self, ctx, number):
