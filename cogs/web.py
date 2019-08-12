@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 import wikipedia
 import aiohttp
 from io import BytesIO
+from .utils import process_url
 
 
 class Web(commands.Cog):
@@ -76,6 +77,14 @@ class Web(commands.Cog):
     """Command for user"""
     query = query.replace(" ", "%20")
     await ctx.send(f"https://www.reddit.com/user/{query}")
+
+  @commands.command()
+  async def httpcat(self, ctx, number):
+    img = process_url(ctx, f'https://http.cat/{number}')
+    io = BytesIO()
+    img.save(io, format='png')
+    io.seek(0)
+    await ctx.send(file=discord.File(io, 'out.png'))
 
 def setup(client):
   client.add_cog(Web(client))
