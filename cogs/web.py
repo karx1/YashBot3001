@@ -80,7 +80,7 @@ class Web(commands.Cog):
 
   @commands.command()
   async def httpcat(self, ctx, number):
-    img = process_url(ctx, f'https://http.cat/{number}')
+    img = await process_url(ctx, f'https://http.cat/{number}')
     io = BytesIO()
     img.save(io, format='png')
     io.seek(0)
