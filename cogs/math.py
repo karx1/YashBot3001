@@ -88,5 +88,9 @@ class Math(commands.Cog):
 	  subtracted_value = float(number1) - float(number2)
 	  await ctx.send(f"{number1} - {number2} is {subtracted_value}")
 
+  @commands.command()
+  async def average(self, ctx, *args: int):
+    await ctx.send(f"The average is {sum(args) / len(args)}")
+
 def setup(client):
   client.add_cog(Math(client))
