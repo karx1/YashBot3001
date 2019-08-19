@@ -106,6 +106,8 @@ class customBot(commands.Bot):
     print(fi.read())
 
   async def process_commands(self, message):
+    if message.author.bot:
+      return
     ctx = await super().get_context(message, cls=commands.Context)
     await self.invoke(ctx)
 
