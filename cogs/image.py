@@ -7,7 +7,6 @@ from .utils import async_executor
 import numpy as np
 import copy
 import typing
-import aiohttp
 from .utils import process_url
 
 def link(arr, arr2):
