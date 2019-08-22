@@ -73,6 +73,7 @@ class customBot(commands.Bot):
       await ctx.send("It looks like you can't use this command. If you believe this is a mistake, ask for help in the support server!")
     elif isinstance(error, commands.MissingRequiredArgument):
       await ctx.send(f"Looks like you forgot to provide `{error.param}`!")
+      await ctx.send_help(ctx.command)
     elif isinstance(error, ZeroDivisionError):
       await ctx.send("I can't divide by zero!")
     elif isinstance(error, wikipedia.DisambiguationError):
