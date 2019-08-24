@@ -9,6 +9,10 @@ import aiohttp
 from io import BytesIO
 from .utils import process_url
 
+async def url_status_ok(url):
+  async with aiohttp.ClientSession() as cs:
+    async with cs.get(url) as resp:
+      return resp.status == 200
 
 class Web(commands.Cog):
   def __init__(self, client):
@@ -70,13 +74,21 @@ class Web(commands.Cog):
   async def subreddit(self, ctx, query):
     """Command for subreddit"""
     query = query.lower().replace(" ", "%20")
-    await ctx.send(f"https://www.reddit.com/r/{query}/")
+    url = f"https://www.reddit.com/r/{query}/"
+    if await url_status_ok(url):
+      await ctx.send(url)
+    else:
+      await ctx.send('That subreddit does not exist!')
   
   @reddit.command(aliases=['u'])
   async def user(self, ctx, query):
     """Command for user"""
     query = query.replace(" ", "%20")
-    await ctx.send(f"https://www.reddit.com/user/{query}")
+    url = f"https://www.reddit.com/user/{query}"
+    if await url_status_ok(url):
+      await ctx.send(url)
+    else:
+      await ctx.send("That user does not exist!")
 
   @commands.command()
   async def httpcat(self, ctx, number):
