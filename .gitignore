@@ -1,5 +1,8 @@
+#direct ignores
 cogs/__pycache__/
-
 token.txt
 
+#star ignores
 *.swp
+*.code-workspace
+
