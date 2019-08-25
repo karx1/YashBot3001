@@ -12,7 +12,7 @@ from .utils import process_url
 async def url_status_ok(url):
   async with aiohttp.ClientSession() as cs:
     async with cs.get(url) as resp:
-      return resp.status == 200
+      return resp.status != 404
 
 class Web(commands.Cog):
   def __init__(self, client):
