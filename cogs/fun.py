@@ -59,6 +59,7 @@ class Fun(commands.Cog):
 
   @commands.command()
   async def choose(self, ctx, *args):
+    """Chooses between a number of choices. For multiple-word choices wrap the choice in quotes, like this: ;choose quoteless "with quotes\""""
     choice = random.choice(args)
     await ctx.send(f"I choose {choice}!")
 
