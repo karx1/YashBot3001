@@ -144,7 +144,12 @@ class customBot(commands.Bot):
     title = title or ""
     description = description or ""
     colour = colour or color
-    embed = discord.Embed(title=title, description=description, color=colour)
+    data = {
+      'title': title,
+      'description': description,
+      'color': colour
+    }
+    embed = discord.Embed.from_dict(data)
     return embed
 
 
