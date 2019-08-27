@@ -1,6 +1,7 @@
 #direct ignores
 cogs/__pycache__/
 token.txt
+discordbot/
 
 #star ignores
 *.swp
