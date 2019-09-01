@@ -2,6 +2,7 @@
 cogs/__pycache__/
 token.txt
 discordbot/
+settings.json
 
 #star ignores
 *.swp
