@@ -2,7 +2,7 @@
 cogs/__pycache__/
 token.txt
 discordbot/
-settings.json
+.vscode/
 
 #star ignores
 *.swp
