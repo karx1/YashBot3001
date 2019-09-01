@@ -24,6 +24,7 @@ class PaginatorEmbedInterface(PaginatorInterface):
         self._embed.description = self.pages[display_page]
         self._embed.set_footer(text=f'Page {display_page + 1}/{self.page_count}')
         self._embed.colour = 0x00ff00
+        self._embed.set_author(name=self.bot.user.display_name, icon_url=str(self.bot.user.avatar_url))
         return {'embed': self._embed}
 
     max_page_size = 2048
