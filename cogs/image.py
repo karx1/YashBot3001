@@ -263,13 +263,14 @@ class Image_(commands.Cog, name="Image"):
     await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command()
-  async def supreme(self, ctx, *, text=""):
-    c = discord.Colour.from_rgb(255, 0, 0)
-    embed = discord.Embed(title="", description="", colour=c)
+  async def supreme(self, ctx, *, text="Supreme"):
     text = text.replace(" ", "%20")
     url = f"https://api.alexflipnote.dev/supreme?text={text}"
-    embed.set_image(url=url)
-    await ctx.send(embed=embed)
+    img = await process_url(ctx, url)
+    io = BytesIO()
+    img.save(io, format='png')
+    io.seek(0)
+    await ctx.send(file=discord.File(io, 'out.png'))
 
   @commands.command()
   async def deepfry(self, ctx, *, url = None):
