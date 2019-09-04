@@ -5,10 +5,6 @@ import inspect
 import os
 from jishaku.paginators import PaginatorInterface
 
-class counter:
-  start_time = datetime.datetime.now()
-c = counter()
-
 class PaginatorEmbedInterface(PaginatorInterface):
     """
     A subclass of :class:`PaginatorInterface` that encloses content in an Embed.
