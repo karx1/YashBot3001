@@ -8,6 +8,7 @@ import datetime
 import aiohttp
 import numpy
 import logging
+import glob
 
 
 async def get_prefix(client, message):
@@ -151,7 +152,37 @@ class customBot(commands.Bot):
     }
     embed = discord.Embed.from_dict(data)
     return embed
+  
+  def getlinecount(self, directory):
+    print(os.getcwd())
+    if 'cogs' in os.getcwd():
+      os.chdir('..')
+    os.chdir(directory)
+    names=[]
+    for fn in glob.glob('*.py'):
+      with open(fn) as f:
+        names.append(sum(1 for line in f if line.strip() and not line.startswith('#')))
 
+    return sum(names)
+
+  @property
+  def filecount(self):
+    if 'cogs' in os.getcwd():
+      os.chdir('..')
+    x = [
+      len([i for i in os.listdir('.') if not i.startswith('.')]),
+      len([i for i in os.listdir('cogs') if not i.startswith('.')]),
+      len([i for i in os.listdir('templates') if not i.startswith('.')])
+    ]
+    return sum(x)
+
+  @property
+  def linecount(self):
+    x = [
+      self.getlinecount('.'),
+      self.getlinecount('./cogs')
+    ]
+    return sum(x)
 
 client = customBot(command_prefix=get_prefix, case_insensitive=True)
 
