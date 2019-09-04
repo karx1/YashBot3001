@@ -78,7 +78,7 @@ class Info(commands.Cog):
     users = len(self.client.users)
     servers = len(self.client.guilds)
     embed = await self.client.embed()
-    embed.add_field(name="YashBot3001 info", value="This bot was made by Yash Karandikar. It is spread out in 20 files, is written in Python 3.7, and uses discord.py 1.1.1.\nEnjoy!", inline=False)
+    embed.add_field(name="YashBot3001 info", value=f"This bot was made by Yash Karandikar. It is spread out in {self.client.filecount} files and made of {self.client.linecount} lines, is written in Python 3.7, and uses discord.py 1.1.1.\nEnjoy!", inline=False)
     embed.add_field(name="Prefix", value=";", inline=False)
     embed.add_field(name="Changelog", value="[Check out the changelog here!](https://tinyurl.com/yashrobot)", inline=False)
     embed.add_field(name="Users", value=f"This bot can see {users} users and {servers} servers.")
