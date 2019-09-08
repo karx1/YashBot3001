@@ -118,7 +118,7 @@ class customBot(commands.Bot):
     time = datetime.datetime.now()
     try:
       channel2 = discord.utils.get(guild.channels, name='general')
-      await channel2.send("Hey! I'm YashBot3001! Do ;help for more info!")
+      await channel2.send("Hey! I'm YashBot3001! Do ;help for my commands and ;info for info about me!")
     except:
       pass
     finally:
