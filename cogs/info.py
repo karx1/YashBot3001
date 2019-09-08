@@ -4,6 +4,9 @@ import datetime
 import inspect
 import os
 from jishaku.paginators import PaginatorInterface
+import humanize
+
+
 
 class PaginatorEmbedInterface(PaginatorInterface):
     """
@@ -49,6 +52,7 @@ class Info(commands.Cog):
     self._original_help_command = commands.MinimalHelpCommand()
     client.help_command = MinimalEmbedPaginatorHelp()
     client.help_command.cog = self
+    self.start_time = datetime.datetime.now()
 
   def cog_unload(self):
     self.client.help_command = self._original_help_command
@@ -120,8 +124,8 @@ class Info(commands.Cog):
   @commands.command()
   async def uptime(self, ctx):
     command_time = datetime.datetime.now()
-    ut = command_time - c.start_time
-    await ctx.send(f"This bot has been alive for {ut}")
+    ut = command_time - self.start_time
+    await ctx.send(f"This bot has been alive for {humanize.naturaldelta(ut)}")
 
   @commands.command(aliases=["servers"])
   async def guilds(self, ctx):
