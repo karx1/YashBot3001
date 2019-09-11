@@ -1,7 +1,7 @@
 #direct ignores
 cogs/__pycache__/
 token.txt
-discordbot/
+.venv/
 .vscode/
 
 #star ignores
