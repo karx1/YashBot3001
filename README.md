@@ -1,8 +1,8 @@
 # YashBot3001
 Discord bot written with discord.py.
 
-[![Build Status](https://travis-ci.com/nerdstep710/YashBot3001.svg?branch=master)](https://travis-ci.com/nerdstep710/YashBot3001)
-
+![Build Status](https://img.shields.io/static/v1?label=build&message=passing&color=brightgreen)
+![Python Version](https://img.shields.io/static/v1?label=Python&message=3.6-3.7&color=blue)
 
 This is a discord bot made for fun.
 if you go to the [original repl.it](https://repl.it/@Nerdstep710/YashBot3001) and fork it, put your token in a file called .env - this is for security purposes. It must look like this: BOT_TOKEN=your_token_here. If you fork the 'untested' branch of this repo, your token goes in a file called 'token.txt' in the same directory as the bot.py file, with no trailing whitespace. Again, for security purposes.
