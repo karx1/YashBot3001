@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from threading import Thread
 
-app = Flask('Yashot3001')
+app = Flask('YashBot3001')
 
 @app.route('/')
 def home():
