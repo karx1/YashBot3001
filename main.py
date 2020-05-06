@@ -31,6 +31,10 @@ class customBot(commands.Bot):
     self.handler = logging.FileHandler(filename='bot.log', encoding='utf-8', mode='w')
     self.handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
     self.logger.addHandler(self.handler)
+    self.ps_task = self.loop.create_task(self.playingstatus())
+    self.change_status = True
+
+
 
     extensions = [
       'jishaku',
@@ -51,6 +55,16 @@ class customBot(commands.Bot):
     for e in extensions:
       self.load_extension(e)
 
+  async def playingstatus(self):
+    await self.wait_until_ready()
+    await asyncio.sleep(3) # Load users
+    while self.is_ready() and self.change_status:
+        activity1 = discord.Activity(name=f"{len(self.users)} users | {len(self.guilds)} servers", type=discord.ActivityType.watching)
+        await client.change_presence(activity=activity1)
+        await asyncio.sleep(30)
+        await self.change_presence(activity=discord.Game(name=";help"))
+        await asyncio.sleep(30)
+
   async def on_ready(self):
     print("Existing Servers:")
     async for guild in self.fetch_guilds():
@@ -59,10 +73,8 @@ class customBot(commands.Bot):
       self.http2 = aiohttp.ClientSession()
     if not self.http3:
       self.http3 = aiohttp.ClientSession(headers={"Authorization": "cce0575985727a5e75264b4baf9523251cb429f9f6941d39b853acac6b3eca8df42c27fccf5682cd8b661930600b6bab471a9e97eba7e75df4ac2d7bfc1bf4d7"})
-    activity1 = discord.Activity(name=f'{len(client.users)} users | {len(client.guilds)} servers', type=discord.ActivityType.watching)
-    await client.change_presence(activity=activity1)
-
-
+    # activity1 = discord.Activity(name=f'{len(client.users)} users | {len(client.guilds)} servers', type=discord.ActivityType.watching)
+    # await client.change_presence(activity=activity1)
 
   async def on_command_error(self, ctx, error):
     error_str = str(error)
@@ -186,12 +198,12 @@ class customBot(commands.Bot):
 client = customBot(command_prefix=get_prefix, case_insensitive=True)
 
 
-@tasks.loop(seconds=10)
+@tasks.loop(seconds=30)
 async def change_status():
   try:
     activity1 = discord.Activity(name=f'{len(client.users)} users | {len(client.guilds)} servers', type=discord.ActivityType.watching)
     await client.change_presence(activity=activity1)
-    await asyncio.sleep(10)
+    await asyncio.sleep(30)
     await client.change_presence(activity=discord.Game(name=";help"))
   except Exception as e:
     print(e)
