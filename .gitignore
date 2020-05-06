@@ -8,3 +8,4 @@ token.txt
 *.swp
 *.code-workspace
 travis.yml
+token.txt

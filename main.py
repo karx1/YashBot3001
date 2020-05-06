@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands, tasks
-from keep_alive import keep_alive
 import os
 import asyncio
 import wikipedia
@@ -18,7 +17,7 @@ async def get_prefix(client, message):
     prefixes = [";", ""]
   else:
     prefixes = [";"]
-  
+
   return commands.when_mentioned_or(*prefixes)(client, message)
 
 class customBot(commands.Bot):
@@ -48,7 +47,7 @@ class customBot(commands.Bot):
       'cogs.tags',
       'cogs.bfd'
       ]
-    
+
     for e in extensions:
       self.load_extension(e)
 
@@ -60,11 +59,11 @@ class customBot(commands.Bot):
       self.http2 = aiohttp.ClientSession()
     if not self.http3:
       self.http3 = aiohttp.ClientSession(headers={"Authorization": "cce0575985727a5e75264b4baf9523251cb429f9f6941d39b853acac6b3eca8df42c27fccf5682cd8b661930600b6bab471a9e97eba7e75df4ac2d7bfc1bf4d7"})
-    
-    change_status.start()
-  
+    activity1 = discord.Activity(name=f'{len(client.users)} users | {len(client.guilds)} servers', type=discord.ActivityType.watching)
+    await client.change_presence(activity=activity1)
 
-  
+
+
   async def on_command_error(self, ctx, error):
     error_str = str(error)
     error = getattr(error, 'original', error)
@@ -99,8 +98,8 @@ class customBot(commands.Bot):
         await ctx.send("Error: {}".format(error_str))
     else:
       await ctx.send("Error: {}".format(error_str))
-    
-    
+
+
     f = open('log.txt', 'a')
     f.write("Error: {}\n".format(error))
     f.close()
@@ -138,7 +137,7 @@ class customBot(commands.Bot):
         assert "key" in out
 
         return "https://mystb.in/raw/" + out["key"]
-  
+
   async def embed(self, *, title=None, description=None, color=None, colour=None):
     """A helper function that created discord.Embed objects"""
     color = color or self.embed_color
@@ -152,7 +151,7 @@ class customBot(commands.Bot):
     }
     embed = discord.Embed.from_dict(data)
     return embed
-  
+
   def getlinecount(self, directory):
     print(os.getcwd())
     if 'cogs' in os.getcwd():
@@ -196,11 +195,12 @@ async def change_status():
     await client.change_presence(activity=discord.Game(name=";help"))
   except Exception as e:
     print(e)
-  
+
 
 
 #initialises the bot
-keep_alive()
 #the token is stored in an .env file. If you fork this, you have to recreate that with the token inside
-token = os.environ.get("BOT_TOKEN")
+token_file = open("token.txt", "r")
+token_string = token_file.read()
+token = "".join(token_string.split())
 client.run(token, bot=True, reconnect=True)
