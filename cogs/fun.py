@@ -76,7 +76,7 @@ class Fun(commands.Cog):
     print("Get him!")
     if target == "":
       target = ctx.message.author.display_name
-    await ctx.send(f"{target} was killed!")
+    await ctx.send(f"I bullied {target}!")
 
   @commands.command()
   async def eat(self, ctx, *, meal = None):
