@@ -43,7 +43,6 @@ class customBot(commands.Bot):
       'cogs.text',
       'cogs.yts',
       'cogs.web',
-      'cogs.other',
       'cogs.owner',
       'cogs.info',
       'cogs.image',
@@ -183,7 +182,7 @@ class customBot(commands.Bot):
     x = [
       len([i for i in os.listdir('.') if not i.startswith('.')]),
       len([i for i in os.listdir('cogs') if not i.startswith('.')]),
-      len([i for i in os.listdir('templates') if not i.startswith('.')])
+      # len([i for i in os.listdir('templates') if not i.startswith('.')])
     ]
     return sum(x)
 
