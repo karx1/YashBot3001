@@ -1,5 +1,5 @@
-FROM python:slim-buster
+FROM python:3.8.3-buster
 COPY . /data
 WORKDIR /data
-RUN apt update && apt install gcc python3-dev -y && pip install -r requirements.txt
+RUN pip install -r requirements.txt
 CMD python ./main.py
