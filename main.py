@@ -147,7 +147,7 @@ class customBot(commands.Bot):
             await channel2.send(
                 "Hey! I'm YashBot3001! Do ;help for my commands and ;info for info about me!"
             )
-        except:
+        except discord.HTTPException:
             pass
         finally:
             await channel1.send(f"Joined server {guild} at {time}")
