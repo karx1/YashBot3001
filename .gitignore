@@ -4,8 +4,11 @@ token.txt
 .venv/
 .vscode/
 .idea/
+bot.log
+data.db
 
 #star ignores
 *.swp
 *.code-workspace
 travis.yml
+**/__pycache__/
