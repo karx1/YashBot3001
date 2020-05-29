@@ -7,6 +7,7 @@ from cogs.utils import async_executor
 import numpy as np
 import copy
 import typing
+import os
 from cogs.utils import process_url
 
 
@@ -171,6 +172,10 @@ def do_sobel(ctx, img):
 class Image_(commands.Cog, name="Image"):
     def __init__(self, client):
         self.client = client
+
+    async def cog_before_invoke(self, ctx):
+        if 'cogs' in os.getcwd():
+            os.chdir("..")
 
     @commands.command()
     async def kirby(self, ctx, *, sent: commands.clean_content):
