@@ -206,6 +206,7 @@ class Image_(commands.Cog, name="Image"):
     draw = ImageDraw.Draw(image)
     draw.text(xy = (180, 50),text ="\n".join(textwrap.wrap(sent, width=10)),fill = (0,0,0), font = font)
     image.save(bio, format="png")
+    bio.seek(0)
     await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command()
@@ -227,6 +228,7 @@ class Image_(commands.Cog, name="Image"):
     draw = ImageDraw.Draw(image)
     draw.text(xy = (375, 300),text="\n".join(textwrap.wrap(sent, width=16)),fill = (0,0,0), font = font)
     image.save(bio, format="png")
+    bio.seek(0)
     await ctx.send(file = discord.File(bio, 'out.png'))
 
   @commands.command()
@@ -237,6 +239,7 @@ class Image_(commands.Cog, name="Image"):
     draw = ImageDraw.Draw(image)
     draw.text(xy = (225, 100),text="\n".join(textwrap.wrap(sent, width=11)),fill = (0,0,0), font = font)
     image.save(bio, format="png")
+    bio.seek(0)
     await ctx.send(file = discord.File(bio, 'out.png'))
 
 
