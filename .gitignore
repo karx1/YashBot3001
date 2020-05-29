@@ -3,9 +3,9 @@ cogs/__pycache__/
 token.txt
 .venv/
 .vscode/
+.idea/
 
 #star ignores
 *.swp
 *.code-workspace
 travis.yml
-token.txt
