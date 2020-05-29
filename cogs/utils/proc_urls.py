@@ -17,12 +17,16 @@ async def process_url(ctx, argument):
     else:
         try:
             url = str(
-                (await commands.MemberConverter().convert(ctx, argument)).avatar_url_as(format="png", size=1024)
+                (await commands.MemberConverter().convert(ctx, argument)).avatar_url_as(
+                    format="png", size=1024
+                )
             )
         except commands.BadArgument:
             try:
                 url = str(
-                    (await commands.UserConverter().convert(ctx, argument)).avatar_url_as(format="png", size=1024)
+                    (
+                        await commands.UserConverter().convert(ctx, argument)
+                    ).avatar_url_as(format="png", size=1024)
                 )
             except commands.BadArgument:
                 url = argument
@@ -32,16 +36,16 @@ async def process_url(ctx, argument):
             try:
                 img = PIL.Image.open(BytesIO(await resp.content.read())).convert("RGB")
             except OSError:
-              if ctx.command.qualified_name == "sort":
-                return #error handler caught it
-              else:
-                await ctx.send(":x: That URL is not an image.")
-                return
+                if ctx.command.qualified_name == "sort":
+                    return  # error handler caught it
+                else:
+                    await ctx.send(":x: That URL is not an image.")
+                    return
     except aiohttp.InvalidURL:
-      if ctx.command.qualified_name == "sort":
-        return #error handler caught it
-      else:
-        await ctx.send(":x: That URL is invalid.")
-        return
+        if ctx.command.qualified_name == "sort":
+            return  # error handler caught it
+        else:
+            await ctx.send(":x: That URL is invalid.")
+            return
 
     return img

@@ -10,5 +10,7 @@ def async_executor():
         def inner(*args, **kwargs):
             thing = functools.partial(func, *args, **kwargs)
             return loop.run_in_executor(None, thing)
+
         return inner
+
     return outer
