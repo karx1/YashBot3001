@@ -40,9 +40,9 @@ class Math(commands.Cog):
 
     @commands.command()
     async def square(self, ctx, number):
-        square = lambda x: float(x) ** 2
+        square = float(number) ** 2
         if await check_answer(ctx, square):
-            await ctx.send(f"{number}² is {square(number)}")
+            await ctx.send(f"{number}² is {square}")
 
     @commands.command()
     async def root(self, ctx, number):
