@@ -6,6 +6,7 @@ token.txt
 .idea/
 bot.log
 data.db
+log.txt
 
 #star ignores
 *.swp
