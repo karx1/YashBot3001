@@ -86,6 +86,9 @@ class customBot(commands.Bot):
         # await client.change_presence(activity=activity1)
 
     async def on_command_error(self, ctx, error):
+        if hasattr(ctx.command, "on_error"):
+            return
+
         error_str = str(error)
         error = getattr(error, "original", error)
         if isinstance(error, commands.CommandNotFound):

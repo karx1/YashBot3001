@@ -1,3 +1,5 @@
+import traceback
+
 import discord
 from discord.ext import commands
 import random
@@ -339,6 +341,30 @@ class Fun(commands.Cog):
             raw_response = await session.get(url)
             response = await raw_response.json(content_type="application/javascript")
             await ctx.send(f"Bitcoin price is: ${response['bpi']['USD']['rate']}")
+
+    @commands.command(name="bot")
+    async def _bot(self, ctx, member: typing.Union[discord.Member, discord.User], *, message: str):
+        name = member.nick or member.name
+        await ctx.message.delete()
+        webhook = await ctx.channel.create_webhook(name=name)
+        await webhook.send(content=message, avatar_url=str(member.avatar_url))
+        await webhook.delete()
+
+    @_bot.error
+    async def _bot_error(self, ctx, error):
+        # await ctx.send(error.__class__)
+        # await ctx.send(error)
+        if isinstance(error, commands.MissingRequiredArgument):
+            if "member" in error.param.name:
+                return await ctx.send("You forgot to provide a member!")
+            elif "message" in error.param.name:
+                return await ctx.send("You forgot to provide something to say!")
+        elif isinstance(error, commands.CommandInvokeError):
+            # await ctx.send(error.original.__class__)
+            if isinstance(error.original, discord.errors.Forbidden):
+                return await ctx.send("I can't complete that command here, because I'm not allowed to!")
+        elif isinstance(error, commands.BadUnionArgument):
+            return await ctx.send("That user does not exist!")
 
 
 def setup(client):
