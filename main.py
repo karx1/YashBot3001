@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 import os
 import asyncio
 import wikipedia
@@ -66,9 +66,9 @@ class customBot(commands.Bot):
                 type=discord.ActivityType.watching,
             )
             await client.change_presence(activity=activity1)
-            await asyncio.sleep(30)
+            await asyncio.sleep(1200)
             await self.change_presence(activity=discord.Game(name=";help"))
-            await asyncio.sleep(30)
+            await asyncio.sleep(1200)
 
     async def on_ready(self):
         print("Existing Servers:")
@@ -210,18 +210,18 @@ class customBot(commands.Bot):
 client = customBot(command_prefix=get_prefix, case_insensitive=True)
 
 
-@tasks.loop(seconds=30)
-async def change_status():
-    try:
-        activity1 = discord.Activity(
-            name=f"{len(client.users)} users | {len(client.guilds)} servers",
-            type=discord.ActivityType.watching,
-        )
-        await client.change_presence(activity=activity1)
-        await asyncio.sleep(30)
-        await client.change_presence(activity=discord.Game(name=";help"))
-    except Exception as e:
-        print(e)
+# @tasks.loop(seconds=30)
+# async def change_status():
+#     try:
+#         activity1 = discord.Activity(
+#             name=f"{len(client.users)} users | {len(client.guilds)} servers",
+#             type=discord.ActivityType.watching,
+#         )
+#         await client.change_presence(activity=activity1)
+#         await asyncio.sleep(30)
+#         await client.change_presence(activity=discord.Game(name=";help"))
+#     except Exception as e:
+#         print(e)
 
 
 # initialises the bot
