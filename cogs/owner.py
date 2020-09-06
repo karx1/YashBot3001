@@ -28,6 +28,13 @@ class Owner(commands.Cog):
         await message.add_reaction("\U0001F44D")
         await message.add_reaction("\U0001F44E")
 
+    @commands.command(hidden=True)
+    @is_me()
+    async def refresh(self, ctx):
+        self.client.loop.create_task(self.client.playingstatus())
+        await ctx.message.add_reaction("\U0001F44D")
+        await ctx.send("Refreshed status.")
+
 
 def setup(client):
     client.add_cog(Owner(client))
